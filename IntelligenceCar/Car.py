@@ -8,11 +8,11 @@
 # import RPi.GPIO as GPIO
 from time import sleep
 
-from Wheel import WheelSystem
-from Camera import CameraSystem
-from Sensors import InfraredSensor
-from Sensors import UltrasonicSensor
-from Sensors import TrackingSensor
+from IntelligenceCar.Wheel import WheelSystem
+from IntelligenceCar.Camera import CameraSystem
+from IntelligenceCar.Sensors import InfraredSensor
+from IntelligenceCar.Sensors import UltrasonicSensor
+from IntelligenceCar.Sensors import TrackingSensor
 
 
 class Car():
@@ -53,11 +53,3 @@ class Car():
     def automatic_track_demo(self):
         """自动寻物演示"""
         pass
-
-
-def main(args):
-    return 0
-
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))

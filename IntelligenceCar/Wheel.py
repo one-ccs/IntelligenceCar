@@ -89,11 +89,3 @@ class WheelSystem():
         self.right_front_wheel.backward()
         self.right_rear_wheel.backward()
         self.left_rear_wheel.forward()
-
-
-def main(args):
-    return 0
-
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))

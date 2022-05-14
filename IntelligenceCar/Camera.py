@@ -21,11 +21,3 @@ class CameraSystem():
     """摄像系统"""
     def __init__(self):
         pass
-
-
-def main(args):
-    return 0
-
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))
