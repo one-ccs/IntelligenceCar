@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 *.vsdx
 *.py[cod]
 dist
 build
+=======
+__pycache__/Camera.cpython-38.pyc
+__pycache__/Sensors.cpython-38.pyc
+__pycache__/Wheel.cpython-38.pyc
+>>>>>>> 2d77c4c10a6a36c6c5c9abe9914074fcaf57a719
