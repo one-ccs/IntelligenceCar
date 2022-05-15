@@ -15,18 +15,26 @@ from gpiozero import Motor
 
 
 class WheelSystem():
-    """四轮驱动器
-    
-    :参数 浮点型 speed:
-        将电机的转速表示为 -1 (全速后退) 到 1 (全速前进) 之间的浮点值.
     """
-    def __init__(self, speed=0.5):
-        self._speed = speed     # 轮子转动速度百分比
+    四轮驱动器
 
-        self.left_front_wheel = Motor(self._speed)  # 左前轮
-        self.right_front_wheel = Motor(self._speed) # 右前轮
-        self.right_rear_wheel = Motor(self._speed)  # 右后轮
-        self.left_rear_wheel = Motor(self._speed)   # 左后轮
+    :参数 整型元组 pins:
+        初始化驱动 PIN 接口的二维元组表
+        (
+            (左前前进, 左前后退), (右前前进, 右前后退),
+            (右后前进, 右后后退), (左后前进, 左后后退)
+        )
+
+    :属性 浮点型 speed:
+        将电机的转速表示为 -1.0 (全速后退) 到 +1.0 (全速前进) 之间的浮点值.
+    """
+    def __init__(self, pins=((),(),(),())):
+        self._speed = 0.5     # 轮子转动速度百分比
+
+        self.left_front_wheel = Motor(forward=pins[0][0], backward=pins[0][1])  # 左前轮
+        self.right_front_wheel = Motor(forward=pins[1][0], backward=pins[1][1]) # 右前轮
+        self.right_rear_wheel = Motor(forward=pins[2][0], backward=pins[2][1])  # 右后轮
+        self.left_rear_wheel = Motor(forward=pins[3][0], backward=pins[3][1])   # 左后轮
 
     @property
     def speed(self):
@@ -34,8 +42,10 @@ class WheelSystem():
 
     @speed.setter
     def speed(self, speed):
-        if not isinstance(speed, int):
-            raise ValueError("")
+        if not isinstance(speed, float):
+            raise ValueError("期待一个浮点型 speed.")
+        if speed < -1 or speed > 1:
+            raise ValueError("无效的参数 speed, 应为 -1.0 到 +1.0。")
         self._speed = speed
 
         self.left_front_wheel.value = speed

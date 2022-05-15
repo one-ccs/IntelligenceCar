@@ -8,7 +8,9 @@
 from IntelligenceCar.Car import Car
 
 def main(args):
-    car = Car()
+    car = Car(((0,1),(2,3),(4,5),(6,7)))
+    
+    help(car.wheels.left_front_wheel)
     
     return 0
 
