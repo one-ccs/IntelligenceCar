@@ -1,4 +1,9 @@
 *.vsdx
+*.docx
 *.py[cod]
+
 dist
 build
+
+one-ccs_git_ssh
+one-ccs_git_ssh.pub
