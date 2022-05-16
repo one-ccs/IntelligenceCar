@@ -11,7 +11,7 @@ from gpiozero import DistanceSensor
 from gpiozero import TonalBuzzer
 
 
-class OCDistanceSensor(DistanceSensor):
+class ICDistanceSensor(DistanceSensor):
     """超声波传感器"""
 
     def __init__(self, echo=None, trigger=None, queue_len=9, max_distance=1, threshold_distance=0.3, partial=False, pin_factory=None):
@@ -21,7 +21,7 @@ class OCDistanceSensor(DistanceSensor):
         pass
 
 
-class OCLineSensor(LineSensor):
+class ICLineSensor(LineSensor):
     """巡线传感器"""
 
     def __init__(self, pin=None, pull_up=False, active_state=None, queue_len=5, sample_rate=100, threshold=0.5, partial=False, pin_factory=None):
@@ -35,9 +35,9 @@ class LineSystem():
     """三个巡线传感器组成的巡线系统"""
 
     def __init__(self, left_pin, mid_pin, right_pin) -> None:
-        self.line_left = OCLineSensor(left_pin)
-        self.line_mid = OCLineSensor(mid_pin)
-        self.line_right = OCLineSensor(right_pin)
+        self.line_left = ICLineSensor(left_pin)
+        self.line_mid = ICLineSensor(mid_pin)
+        self.line_right = ICLineSensor(right_pin)
 
     @property
     def state(self):
@@ -45,7 +45,7 @@ class LineSystem():
         return (self.line_left.value, self.line_mid.value, self.line_right)
 
 
-class OCInfraredSensor():
+class ICInfraredSensor():
     """红外避障传感器"""
 
     def __init__(self, *args, **kw) -> None:

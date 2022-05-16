@@ -15,13 +15,15 @@ WHEELS_PIN = ((0, 0), (0, 0), (0, 0), (0, 0))
 CAMERA_PIN = 0
 # 红外避障传感器针脚 (左, 右)
 INFRAREDS_PIN = (0, 0)
-# 超声波传感器针脚
-DISTANCE_PIN = 0
+# 超声波传感器针脚 (回声针脚 echo, 触发针脚 trigger)
+DISTANCE_PIN = (0, 0)
 # 寻线传感器针脚 (左, 中, 右)
 LINES_PIN = (0, 0, 0)
+# 蜂鸣器针脚
+BUZZER_PIN = 0
 
 # 定义智能小车
-car = Car(WHEELS_PIN, CAMERA_PIN, INFRAREDS_PIN, DISTANCE_PIN, LINES_PIN)
+car = Car(WHEELS_PIN, CAMERA_PIN, INFRAREDS_PIN, DISTANCE_PIN, LINES_PIN, BUZZER_PIN)
 
 
 def sport_demo() -> None:
