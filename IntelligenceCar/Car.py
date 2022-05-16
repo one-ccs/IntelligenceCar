@@ -29,11 +29,11 @@ class Car():
         self._STEER_TIME = 0.0    # 车子旋转 1° 需要的秒数
         self._STRAIGHT_TIME = 0.0  # 车子直行一单位 1cm 需要的秒数
 
-        self.wheels = WheelSystem(wheels_pin)           # 车轮系统
+        self.wheels = WheelSystem(wheels_pin)             # 车轮系统
         # self.camera = CameraSystem(camera_pin)          # 摄像头
-        self.infrared = OCInfraredSensor(infrareds_pin)  # 红外避障
-        self.distance = OCDistanceSensor(distance_pin)  # 超声波
-        self.line = LineSystem(lines_pin)               # 巡线z
+        self.infrareds = OCInfraredSensor(infrareds_pin)  # 红外避障
+        self.distance = OCDistanceSensor(distance_pin)    # 超声波
+        self.lines = LineSystem(lines_pin)                # 巡线z
 
     def turn_left(self, deg: int) -> None:
         """

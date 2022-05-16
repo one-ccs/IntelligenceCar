@@ -49,7 +49,16 @@ def sport_demo() -> None:
 
 def line_demo(self) -> None:
     """智能小车巡线演示"""
-    pass
+    for i in range(100):
+        if car.lines.state == (False, True, False):
+            # 在中心线 直行
+            car.forward(4)
+        elif car.lines.state == (True, False, False):
+            # 偏右 向左转
+            car.turn_left(15)
+        elif car.lines.state == (False, False, True):
+            # 偏左 向右转
+            car.turn_right(15)
 
 
 def infrared_demo(self) -> None:

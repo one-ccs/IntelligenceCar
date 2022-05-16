@@ -39,9 +39,10 @@ class LineSystem():
         self.line_mid = OCLineSensor(mid_pin)
         self.line_right = OCLineSensor(right_pin)
 
-    def state():
+    @property
+    def state(self):
         """返回传感器状态"""
-        pass
+        return (self.line_left.value, self.line_mid.value, self.line_right)
 
 
 class OCInfraredSensor():
