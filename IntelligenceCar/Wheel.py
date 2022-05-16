@@ -19,8 +19,7 @@ class WheelSystem():
     四轮驱动器
 
     :参数 整型元组 pins:
-        初始化驱动 pin 接口的二维元组表
-        (
+        初始化驱动 pin 接口的二维元组表 (
             (左前前进, 左前后退), (右前前进, 右前后退),
             (右后前进, 右后后退), (左后前进, 左后后退)
         )
@@ -28,7 +27,7 @@ class WheelSystem():
     :属性 浮点型 speed:
         将电机的转速表示为 -1.0 (全速后退) 到 +1.0 (全速前进) 之间的浮点值。
     """
-    def __init__(self, pins=((),(),(),())):
+    def __init__(self, pins=((None,None),(None,None),(None,None),(None,None))) -> None:
         self._speed = 0.5     # 轮子转动速度百分比
 
         self.left_front_wheel = Motor(forward=pins[0][0], backward=pins[0][1])  # 左前轮
@@ -37,11 +36,11 @@ class WheelSystem():
         self.left_rear_wheel = Motor(forward=pins[3][0], backward=pins[3][1])   # 左后轮
 
     @property
-    def speed(self):
+    def speed(self) -> float:
         return self._speed
 
     @speed.setter
-    def speed(self, speed:float):
+    def speed(self, speed:float) -> None:
         if not isinstance(speed, float):
             raise ValueError("期待一个浮点型 speed.")
         if speed < -1 or speed > 1:
@@ -65,35 +64,35 @@ class WheelSystem():
             self.left_rear_wheel.is_active
         )
 
-    def stop(self):
+    def stop(self) -> None:
         """停止"""
         self.left_front_wheel.stop()
         self.right_front_wheel.stop()
         self.right_rear_wheel.stop()
         self.left_rear_wheel.stop()
 
-    def forward(self):
+    def forward(self) -> None:
         """前进"""
         self.left_front_wheel.forward()
         self.right_front_wheel.forward()
         self.right_rear_wheel.forward()
         self.left_rear_wheel.forward()
 
-    def backward(self):
+    def backward(self) -> None:
         """后退"""
         self.left_front_wheel.backward()
         self.right_front_wheel.backward()
         self.right_rear_wheel.backward()
         self.left_rear_wheel.backward()
 
-    def turn_left(self):
+    def turn_left(self) -> None:
         """左转"""
         self.left_front_wheel.backward()
         self.right_front_wheel.forward()
         self.right_rear_wheel.forward()
         self.left_rear_wheel.backward()
 
-    def turn_right(self):
+    def turn_right(self) -> None:
         """右转"""
         self.left_front_wheel.forward()
         self.right_front_wheel.backward()
