@@ -27,20 +27,25 @@ class WheelSystem():
     :属性 浮点型 speed:
         将电机的转速表示为 -1.0 (全速后退) 到 +1.0 (全速前进) 之间的浮点值。
     """
-    def __init__(self, pins=((None,None),(None,None),(None,None),(None,None))) -> None:
+
+    def __init__(self, pins=((None, None), (None, None), (None, None), (None, None))) -> None:
         self._speed = 0.5     # 轮子转动速度百分比
 
-        self.left_front_wheel = Motor(forward=pins[0][0], backward=pins[0][1])  # 左前轮
-        self.right_front_wheel = Motor(forward=pins[1][0], backward=pins[1][1]) # 右前轮
-        self.right_rear_wheel = Motor(forward=pins[2][0], backward=pins[2][1])  # 右后轮
-        self.left_rear_wheel = Motor(forward=pins[3][0], backward=pins[3][1])   # 左后轮
+        self.left_front_wheel = Motor(
+            forward=pins[0][0], backward=pins[0][1])  # 左前轮
+        self.right_front_wheel = Motor(
+            forward=pins[1][0], backward=pins[1][1])  # 右前轮
+        self.right_rear_wheel = Motor(
+            forward=pins[2][0], backward=pins[2][1])  # 右后轮
+        self.left_rear_wheel = Motor(
+            forward=pins[3][0], backward=pins[3][1])   # 左后轮
 
     @property
     def speed(self) -> float:
         return self._speed
 
     @speed.setter
-    def speed(self, speed:float) -> None:
+    def speed(self, speed: float) -> None:
         if not isinstance(speed, float):
             raise ValueError("期待一个浮点型 speed.")
         if speed < -1 or speed > 1:

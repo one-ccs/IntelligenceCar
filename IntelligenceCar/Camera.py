@@ -7,6 +7,7 @@
 #
 class Camera():
     """摄像头"""
+
     def __init__(self) -> None:
         pass
 
@@ -24,23 +25,24 @@ class Camera():
 
 
 class PanTilt():
-    """摄像头云台"""
+    """云台"""
+
     def __init__(self) -> None:
         pass
 
-    def move_up(self, distance:int) -> None:
+    def move_up(self, distance: int) -> None:
         """向上"""
         pass
 
-    def move_right(self, distance:int) -> None:
+    def move_right(self, distance: int) -> None:
         """向右"""
         pass
 
-    def move_down(self, distance:int) -> None:
+    def move_down(self, distance: int) -> None:
         """向下"""
         pass
 
-    def move_left(self, distance:int) -> None:
+    def move_left(self, distance: int) -> None:
         """向左"""
         pass
 
@@ -51,6 +53,7 @@ class PanTilt():
 
 class CameraSystem():
     """摄像系统"""
+
     def __init__(self) -> None:
         self.camera = Camera()
         self.pan_tilt = PanTilt()
