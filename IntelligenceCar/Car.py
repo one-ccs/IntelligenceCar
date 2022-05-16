@@ -20,8 +20,8 @@ class Car():
     """智能小车"""
     def __init__(self):
         self._STEER_TIME = 0.36    # 车子旋转一度需要的秒数
-        self._STRAIGHT_TIME = 0.36 # 车子直行一单位 () 需要的秒数
-        
+        self._STRAIGHT_TIME = 0.36 # 车子直行一单位 (厘米) 需要的秒数
+
         self.wheels = WheelSystem()          # 车轮系统
         self.camera = CameraSystem()         # 摄像头
         self.infrared = InfraredSensor()     # 红外避障

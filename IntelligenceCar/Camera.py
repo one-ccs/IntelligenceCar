@@ -23,7 +23,7 @@ class Camera():
         pass
 
 
-class CameraPanTilt():
+class PanTilt():
     """摄像头云台"""
     def __init__(self):
         pass
@@ -53,7 +53,7 @@ class CameraSystem():
     """摄像系统"""
     def __init__(self):
         self.camera = Camera()
-        self.pan_tilt = CameraPanTilt()
+        self.pan_tilt = PanTilt()
 
     def track(self, image):
         """使摄像头瞄准目标物"""
