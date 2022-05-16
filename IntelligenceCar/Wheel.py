@@ -41,7 +41,7 @@ class WheelSystem():
         return self._speed
 
     @speed.setter
-    def speed(self, speed):
+    def speed(self, speed:float):
         if not isinstance(speed, float):
             raise ValueError("期待一个浮点型 speed.")
         if speed < -1 or speed > 1:
@@ -54,7 +54,7 @@ class WheelSystem():
         self.left_rear_wheel.value = speed
 
     @property
-    def active_state(self):
+    def active_state(self) -> tuple:
         """
         返回一个表示四个轮子 (左前、右前、右后、左后) 运行状态的元组, 元素类型为 bool。
         """

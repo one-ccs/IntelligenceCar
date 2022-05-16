@@ -28,19 +28,19 @@ class PanTilt():
     def __init__(self):
         pass
 
-    def move_up(self, distance):
+    def move_up(self, distance:int):
         """向上"""
         pass
 
-    def move_right(self, distance):
+    def move_right(self, distance:int):
         """向右"""
         pass
 
-    def move_down(self, distance):
+    def move_down(self, distance:int):
         """向下"""
         pass
 
-    def move_left(self, distance):
+    def move_left(self, distance:int):
         """向左"""
         pass
 

@@ -5,19 +5,29 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-class InfraredSensor():
+from gpiozero import LineSensor
+from gpiozero import DistanceSensor
+
+
+class OCInfraredSensor():
     """红外避障传感器"""
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super.__init__(args, kw)
+
         pass
 
 
-class UltrasonicSensor():
+class OCDistanceSensor(DistanceSensor):
     """超声波传感器"""
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super.__init__(args, kw)
+
         pass
 
 
-class TrackingSensor():
-    """寻迹传感器"""
-    def __init__(self):
+class OCLineSensor(LineSensor):
+    """巡线传感器"""
+    def __init__(self, *args, **kw):
+        super.__init__(args, kw)
+
         pass
