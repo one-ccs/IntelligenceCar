@@ -27,7 +27,7 @@ car = Car(WHEELS_PIN, CAMERA_PIN, INFRAREDS_PIN, DISTANCE_PIN, LINES_PIN)
 def sport_demo() -> None:
     """智能小车运动演示"""
     # 走一个正方形
-    for i in range(0, 4):
+    for i in range(4):
         # 前进 100 cm
         car.forward(100)
         # 右转 90°
