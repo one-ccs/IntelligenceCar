@@ -10,9 +10,9 @@ from time import sleep
 
 from IntelligenceCar.Wheel import WheelSystem
 from IntelligenceCar.Camera import CameraSystem
-from IntelligenceCar.Sensors import OCInfraredSensor
-from IntelligenceCar.Sensors import OCDistanceSensor
-from IntelligenceCar.Sensors import LineSystem
+from IntelligenceCar.Devices import OCInfraredSensor
+from IntelligenceCar.Devices import OCDistanceSensor
+from IntelligenceCar.Devices import LineSystem
 
 
 class Car():
