@@ -48,18 +48,38 @@ class LineSystem():
 class ICInfraredSensor():
     """红外避障传感器"""
 
-    def __init__(self, *args, **kw) -> None:
-        super.__init__(args, kw)
+    def __init__(self, pin) -> None:
+        
 
         pass
 
 
+class InfraredSystem():
+    """红外避障传感器系统"""
+
+    def __init__(self, left_pin, right_pin) -> None:
+        self.left = ICInfraredSensor(left_pin)
+        self.right = ICInfraredSensor(right_pin)
+        
+
+
 class ICTonalBuzzer(TonalBuzzer):
     """音调蜂鸣器"""
+    DO = 261.6
+    RE = 293.6
+    MI = 329.6
+    FA = 349.2
+    SO = 392.0
+    LA = 440.0
+    SI = 493.8
 
     def __init__(self, pin=None, initial_value=None, mid_tone=..., octaves=1, pin_factory=None):
         super().__init__(pin, initial_value, mid_tone, octaves, pin_factory)
 
+        pass
+    
+    def play_song(self):
+        """蜂鸣器演奏一首歌"""
         pass
 
 

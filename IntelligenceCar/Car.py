@@ -92,7 +92,6 @@ class Car():
         self.wheels.forward()
         sleep(self._STRAIGHT_TIME * distance)
         self.wheels.stop()
-        self.wheels.stop()
 
     def backward(self, distance: int) -> None:
         """

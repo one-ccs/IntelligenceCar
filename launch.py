@@ -6,6 +6,7 @@
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
 from math import sqrt
+
 from IntelligenceCar.Car import Car
 
 # 针脚定义
@@ -51,7 +52,7 @@ def sport_demo() -> None:
 
 def line_demo(self) -> None:
     """智能小车巡线演示"""
-    for i in range(100):
+    for i in range(500):
         if car.lines.state == (False, True, False):
             # 在中心线 直行
             car.forward(4)
@@ -67,6 +68,15 @@ def infrared_demo(self) -> None:
     """智能小车红外避障演示"""
     pass
 
+def distance_demo() -> None:
+    """智能小车超声波避障演示"""
+    min_distance = 20
+
+    while(True):
+        if car.distance.value < min_distance:
+            car.backward(4)
+            car.turn_left(30)
+
 
 def automatic_track_demo(self) -> None:
     """智能小车自动寻物演示"""
@@ -77,6 +87,7 @@ def main(args):
     sport_demo()
     line_demo()
     infrared_demo()
+    distance_demo()
 
     return 0
 
