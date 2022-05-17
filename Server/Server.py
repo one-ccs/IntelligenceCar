@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  launch_server.py
+#  Server.py
 #
 from flask import Flask, request
 from flask import render_template
@@ -28,6 +28,3 @@ def getHorn():
         return "OK"
     else:
         return "不支持该请求方式"
-
-
-app.run()

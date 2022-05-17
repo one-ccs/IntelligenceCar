@@ -8,6 +8,8 @@
 from math import sqrt
 
 from IntelligenceCar.Car import Car
+from Server.Server import app
+
 
 # 针脚定义
 # 电机针脚:  ((左前速度, 左前方向), (右前速度, 右前方向), (右后速度, 右后方向), (左后速度, 左后方向))
@@ -94,6 +96,8 @@ def automatic_track_demo(self) -> None:
 
 
 def main(args):
+    # app.run()
+
     move_demo()
     # sport_demo()
     # line_demo()
