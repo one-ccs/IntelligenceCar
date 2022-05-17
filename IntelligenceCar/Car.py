@@ -6,10 +6,11 @@
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
 # import RPi.GPIO as GPIO
+from dis import dis
 from time import sleep
 
-from IntelligenceCar.Wheel import WheelSystem
-from IntelligenceCar.Camera import CameraSystem
+from IntelligenceCar.Wheel import MotorSystem
+# from IntelligenceCar.Camera import CameraSystem
 from IntelligenceCar.Devices import ICInfraredSensor
 from IntelligenceCar.Devices import ICDistanceSensor
 from IntelligenceCar.Devices import LineSystem
@@ -21,8 +22,8 @@ class Car():
     
     :参数 整型二维元组 wheels_pin:
         四个电机的针脚 (
-            (左前前进, 左前后退), (右前前进, 右前后退),
-            (右后前进, 右后后退), (左后前进, 左后后退)
+            (左前速度, 左前方向), (右前速度, 右前方向),
+            (右后速度, 右后方向), (左后速度, 左后方向)
         )。
 
     :参数 整型 camera_pin:
@@ -53,33 +54,21 @@ class Car():
         self._STEER_TIME = 0.0    # 车子旋转 1° 需要的秒数
         self._STRAIGHT_TIME = 0.0  # 车子直行一单位 1cm 需要的秒数
 
-        self.wheels = WheelSystem(wheels_pin)             # 车轮系统
-        self.camera = CameraSystem(camera_pin)            # 摄像头
-        self.infrareds = ICInfraredSensor(infrareds_pin)  # 红外避障
-        self.distance = ICDistanceSensor(distance_pin)    # 超声波
-        self.lines = LineSystem(lines_pin)                # 巡线
-        self.buzzer = ICTonalBuzzer(buzzer_pin)           # 音调蜂鸣器
+        if wheels_pin:
+            self.wheels = MotorSystem(wheels_pin)             # 车轮系统
+        # if camera_pin:
+        #     self.camera = CameraSystem(camera_pin)            # 摄像头
+        if infrareds_pin:
+            self.infrareds = ICInfraredSensor(infrareds_pin)  # 红外避障
+        if distance_pin:
+            self.distance = ICDistanceSensor(distance_pin)    # 超声波
+        if lines_pin:
+            self.lines = LineSystem(lines_pin)                # 巡线
+        if buzzer_pin:
+            self.buzzer = ICTonalBuzzer(buzzer_pin)           # 音调蜂鸣器
 
-    def turn_left(self, deg: int) -> None:
-        """
-        向左旋转指定度数。
-
-        :参数 整型 deg:
-            要选择的度数。
-        """
-        self.wheels.turn_left()
-        sleep(self._STEER_TIME * deg)
-        self.wheels.stop()
-
-    def turn_right(self, deg: int) -> None:
-        """
-        向右旋转指定度数。
-
-        :参数 整型 deg:
-            要选择的度数。
-        """
-        self.wheels.turn_right()
-        sleep(self._STEER_TIME * deg)
+    def stop(self):
+        """停止"""
         self.wheels.stop()
 
     def forward(self, distance: int) -> None:
@@ -102,4 +91,26 @@ class Car():
         """
         self.wheels.backward()
         sleep(self._STRAIGHT_TIME * distance)
+        self.wheels.stop()
+
+    def turn_left(self, deg: int) -> None:
+        """
+        向左旋转指定度数。
+
+        :参数 整型 deg:
+            要选择的度数。
+        """
+        self.wheels.turn_left()
+        sleep(self._STEER_TIME * deg)
+        self.wheels.stop()
+
+    def turn_right(self, deg: int) -> None:
+        """
+        向右旋转指定度数。
+
+        :参数 整型 deg:
+            要选择的度数。
+        """
+        self.wheels.turn_right()
+        sleep(self._STEER_TIME * deg)
         self.wheels.stop()

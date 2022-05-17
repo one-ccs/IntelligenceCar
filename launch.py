@@ -10,21 +10,30 @@ from math import sqrt
 from IntelligenceCar.Car import Car
 
 # 针脚定义
-# 电机针脚:  ((左前前进, 左前后退), (右前前进, 右前后退),(右后前进, 右后后退), (左后前进, 左后后退))
-WHEELS_PIN = ((0, 0), (0, 0), (0, 0), (0, 0))
+# 电机针脚:  ((左前速度, 左前方向), (右前速度, 右前方向), (右后速度, 右后方向), (左后速度, 左后方向))
+WHEELS_PIN = ((22, 18), (27, 18), (25, 23), (24, 23))
 # 摄像头针脚 暂未实现可忽略
 CAMERA_PIN = 0
 # 红外避障传感器针脚 (左, 右)
-INFRAREDS_PIN = (0, 0)
+INFRAREDS_PIN = (12, 16)
 # 超声波传感器针脚 (回声针脚 echo, 触发针脚 trigger)
-DISTANCE_PIN = (0, 0)
+DISTANCE_PIN = (21, 20)
 # 寻线传感器针脚 (左, 中, 右)
-LINES_PIN = (0, 0, 0)
+LINES_PIN = (13, None, 26)
 # 蜂鸣器针脚
-BUZZER_PIN = 0
+BUZZER_PIN = 11
 
 # 定义智能小车
-car = Car(WHEELS_PIN, CAMERA_PIN, INFRAREDS_PIN, DISTANCE_PIN, LINES_PIN, BUZZER_PIN)
+car = Car(WHEELS_PIN, CAMERA_PIN, INFRAREDS_PIN,
+          DISTANCE_PIN, LINES_PIN, BUZZER_PIN)
+
+
+def move_demo() -> None:
+    """前进后退转向演示"""
+    car.forward(10)
+    car.backward(10)
+    car.turn_left(360)
+    car.turn_right(360)
 
 
 def sport_demo() -> None:
@@ -68,6 +77,7 @@ def infrared_demo(self) -> None:
     """智能小车红外避障演示"""
     pass
 
+
 def distance_demo() -> None:
     """智能小车超声波避障演示"""
     min_distance = 20
@@ -84,10 +94,11 @@ def automatic_track_demo(self) -> None:
 
 
 def main(args):
-    sport_demo()
-    line_demo()
-    infrared_demo()
-    distance_demo()
+    move_demo()
+    # sport_demo()
+    # line_demo()
+    # infrared_demo()
+    # distance_demo()
 
     return 0
 
