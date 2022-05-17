@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>树莓派小车控制中心</title>
+</head>
+<body>
+	<div id='body'>
+		<h2>欢迎来到树莓派小车控制系统</h2>
+		<div>
+			<form action="http://localhost:5000/horn" method="post" id="Driver_submit">
+				<input type="button" value="自动驾驶功能" id="driver">
+			</form>
+			<input type="button" value="摄像头识别功能" id="Camera">
+			<input type="button" value="物品追踪功能" id="Item_tracking">
+		</div>
+	</div>
+	<script>
+		driver=document.getElementById("driver");
+		driver.onclick=function (){
+			document.getElementById("Driver_submit").submit();
+		}
+	</script>
+</body>
+</html>

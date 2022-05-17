@@ -2,6 +2,6 @@
 *.docx
 *.py[cod]
 
-dist
-build
-edu
+env
+_edu
+_sundry
