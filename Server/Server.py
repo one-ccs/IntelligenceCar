@@ -6,20 +6,20 @@
 from flask import Flask, request
 from flask import render_template
 
-app = Flask(__name__)
+ic_server = Flask(__name__)
 
 
-@app.route("/")
+@ic_server.route("/")
 def main():
     return render_template("RaspberryPi.html")  # 返回主界面
 
 
-@app.route("/horn", methods=["POST", "GET"])  # 返回轨迹界面
+@ic_server.route("/horn", methods=["POST", "GET"])  # 返回轨迹界面
 def horn():
     return render_template("Horn.html")
 
 
-@app.route("/getHorn", methods=["POST", "GET"])  # 获取轨迹数据
+@ic_server.route("/getHorn", methods=["POST", "GET"])  # 获取轨迹数据
 def getHorn():
     if request.method == "POST":
         data = request.get_json()

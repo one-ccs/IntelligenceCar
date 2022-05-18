@@ -13,13 +13,61 @@ from IntelligenceCar.Wheel import MotorSystem
 # from IntelligenceCar.Camera import CameraSystem
 from IntelligenceCar.Devices import ICInfraredSensor
 from IntelligenceCar.Devices import ICDistanceSensor
-from IntelligenceCar.Devices import LineSystem
+from IntelligenceCar.Devices import ICLineSensor
 from IntelligenceCar.Devices import ICTonalBuzzer
+from IntelligenceCar.Devices import LED
+
+
+class InfraredSystem():
+    """两个红外避障传感器组成的避障系统"""
+
+    def __init__(self, left_pin, right_pin) -> None:
+        self.left = None
+        self.right = None
+
+        if left_pin:
+            self.left = ICInfraredSensor(left_pin)
+        if right_pin:
+            self.right = ICInfraredSensor(right_pin)
+
+
+class LineSystem():
+    """三个巡线传感器组成的巡线系统"""
+
+    def __init__(self, left_pin, mid_pin, right_pin) -> None:
+        self.left = None
+        self.mid = None
+        self.right = None
+
+        if left_pin:
+            self.left = ICLineSensor(left_pin)
+        if mid_pin:
+            self.mid = ICLineSensor(mid_pin)
+        if right_pin:
+            self.right = ICLineSensor(right_pin)
+
+    @property
+    def state(self):
+        """返回传感器状态"""
+        return (self.left.value, self.mid.value, self.right)
+
+
+class Lights():
+    """led 车灯"""
+
+    def __init__(self, left_pin, right_pin) -> None:
+        self.left = None
+        self.right = None
+
+        if left_pin:
+            self.left = LED(left_pin)
+        if right_pin:
+            self.right = LED(right_pin)
 
 
 class Car():
     """智能小车
-    
+
     :参数 整型二维元组 wheels_pin:
         四个电机的针脚 (
             (左前速度, 左前方向), (右前速度, 右前方向),
