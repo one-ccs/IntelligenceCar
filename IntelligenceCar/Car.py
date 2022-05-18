@@ -6,10 +6,8 @@
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
 # import RPi.GPIO as GPIO
-from dis import dis
 from time import sleep
 
-# from IntelligenceCar.Camera import CameraSystem
 from IntelligenceCar.Devices import InfraredSensor
 from IntelligenceCar.Devices import DistanceSensor
 from IntelligenceCar.Devices import LineSensor
@@ -184,7 +182,9 @@ class Car():
         infrareds_pin=(None, None),
         distance_pin=(None, None),
         lines_pin=(None, None, None),
-        buzzer_pin=None
+        buzzer_pin=None,
+        green_led_pin=None,
+        red_led_pin=None
     ) -> None:
         self._STEER_TIME = 0.0    # 车子旋转 1° 需要的秒数
         self._STRAIGHT_TIME = 0.0  # 车子直行一单位 1cm 需要的秒数

@@ -18,7 +18,7 @@ class DistanceSensor(gz.DistanceSensor):
     def __init__(self, echo=None, trigger=None):
         super().__init__(echo, trigger)
 
-    def get_distance(self) -> float:
+    def get_value(self) -> float:
         """返回测量的距离, 单位为厘米 (cm), 或使用 实例.distance 属性获取。"""
         return self.distance * 100
 
@@ -28,16 +28,29 @@ class LineSensor(gz.LineSensor):
 
     def __init__(self, pin=None):
         super().__init__(pin)
-
-        pass
+        
+    def get_value(self) -> float:
+        """返回值接近 0 表示检测到黑色, 接近 1 表示接近白色。"""
+        return self.value
 
 
 class InfraredSensor():
     """红外避障传感器"""
 
-    def __init__(self, pin) -> None:
+    def __init__(self, pin=None) -> None:
+        self.pin = pin
 
-        pass
+        if pin:
+            GPIO.setwarnings(False)     # 关闭警告信息
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(pin, GPIO.IN)
+        else:
+            raise ValueError('初始化 class InfraredSensor 的参数 pin 为无效值。')
+
+    @property
+    def value(self) -> bool:
+        """返回传感器检测值。"""
+        return GPIO.input(self.pin)
 
 
 class TonalBuzzer(gz.TonalBuzzer):
@@ -59,7 +72,6 @@ class TonalBuzzer(gz.TonalBuzzer):
         """蜂鸣器演奏一首歌"""
         if not len(pitch_beat_list) % 2:
             raise ValueError("音阶-节拍表应该为偶数长度。")
-            return
 
 
 class LEDBoard(gz.LEDBoard):
@@ -67,6 +79,8 @@ class LEDBoard(gz.LEDBoard):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        pass
 
 
 class Motor():
@@ -86,12 +100,15 @@ class Motor():
         self.p_pin = p_pin
         self.f_pin = f_pin
 
-        GPIO.setwarnings(False)     # 关闭警告信息
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(p_pin, GPIO.OUT)
-        GPIO.setup(f_pin, GPIO.OUT)
-        self.pwm = GPIO.PWM(p_pin, self._frequency)
-        self.pwm.start(0)
+        if p_pin and f_pin:
+            GPIO.setwarnings(False)     # 关闭警告信息
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(p_pin, GPIO.OUT)
+            GPIO.setup(f_pin, GPIO.OUT)
+            self.pwm = GPIO.PWM(p_pin, self._frequency)
+            self.pwm.start(0)
+        else:
+            raise ValueError('初始化 class Motor 的参数 p_pin 或 f_pin 为无效值。')
 
     def __del__(self):
         self.pwm.stop()
@@ -105,8 +122,8 @@ class Motor():
         """通过控制 pwm 占空比调节电机转速"""
         if speed < -100.0 or speed > 100.0:
             raise ValueError("无效的参数 speed, 应为 -100.0 到 +100.0 之间的数字。")
-            return
-        self._speed = speed
+        else:
+            self._speed = speed
 
     @property
     def frequency(self) -> float:
