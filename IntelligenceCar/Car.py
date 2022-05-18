@@ -9,13 +9,15 @@
 from dis import dis
 from time import sleep
 
-from IntelligenceCar.Wheel import MotorSystem
 # from IntelligenceCar.Camera import CameraSystem
-from IntelligenceCar.Devices import ICInfraredSensor
-from IntelligenceCar.Devices import ICDistanceSensor
-from IntelligenceCar.Devices import ICLineSensor
-from IntelligenceCar.Devices import ICTonalBuzzer
-from IntelligenceCar.Devices import LED
+from IntelligenceCar.Devices import InfraredSensor
+from IntelligenceCar.Devices import DistanceSensor
+from IntelligenceCar.Devices import LineSensor
+from IntelligenceCar.Devices import TonalBuzzer
+from IntelligenceCar.Devices import LEDBoard
+from IntelligenceCar.Devices import Motor
+from IntelligenceCar.Devices import Camera
+from IntelligenceCar.Devices import PanTilt
 
 
 class InfraredSystem():
@@ -26,9 +28,9 @@ class InfraredSystem():
         self.right = None
 
         if left_pin:
-            self.left = ICInfraredSensor(left_pin)
+            self.left = InfraredSensor(left_pin)
         if right_pin:
-            self.right = ICInfraredSensor(right_pin)
+            self.right = InfraredSensor(right_pin)
 
 
 class LineSystem():
@@ -40,11 +42,11 @@ class LineSystem():
         self.right = None
 
         if left_pin:
-            self.left = ICLineSensor(left_pin)
+            self.left = LineSensor(left_pin)
         if mid_pin:
-            self.mid = ICLineSensor(mid_pin)
+            self.mid = LineSensor(mid_pin)
         if right_pin:
-            self.right = ICLineSensor(right_pin)
+            self.right = LineSensor(right_pin)
 
     @property
     def state(self):
@@ -56,13 +58,98 @@ class Lights():
     """led 车灯"""
 
     def __init__(self, left_pin, right_pin) -> None:
-        self.left = None
-        self.right = None
+        self.lights = None
 
-        if left_pin:
-            self.left = LED(left_pin)
-        if right_pin:
-            self.right = LED(right_pin)
+        if left_pin and right_pin:
+            self.lights = LEDBoard(left_pin, right_pin, pwm=True)
+
+    def set(self, left_brightness=1.0, right_brightness=1.0) -> None:
+        """同时调节两个 led 的亮度, 取值为 0.0 熄灭到 1.0 高亮。"""
+        self.lights.value = (left_brightness, right_brightness)
+
+    def both_on(self) -> None:
+        self.lights.on()
+
+    def both_off(self) -> None:
+        self.lights.off()
+
+
+class MotorSystem():
+    """
+    四轮驱动器
+
+    :参数 整型元组 pins:
+        初始化电机 pin 接口的二维元组表 (
+            (左前速度, 左前方向), (右前速度, 右前方向),
+            (右后速度, 右后方向), (左后速度, 左后方向)
+        )
+
+    :属性 浮点型 speed:
+        将电机的转速表示为 -100.0 (全速后退) 到 +100.0 (全速前进) 之间的浮点值。
+    """
+
+    def __init__(self, pins=((None, None), (None, None), (None, None), (None, None))) -> None:
+        self._speed = 50.0 # 轮子转动速度百分比
+        self.motors = [None, None, None, None] # 左前、右前、右后、左后电机
+
+        for i in range(4):
+            self.motors[i] = Motor(pins[i][0], pins[i][1])
+
+    @property
+    def speed(self) -> float:
+        return self._speed
+
+    @speed.setter
+    def speed(self, speed: float) -> None:
+        self._speed = speed
+
+        for i in range(4):
+            self.motors[i].speed = speed
+
+    def stop(self) -> None:
+        """停止"""
+        for i in range(4):
+            self.motors[i].stop()
+
+    def forward(self) -> None:
+        """前进"""
+        for i in range(4):
+            self.motors[i].forward()
+
+    def backward(self) -> None:
+        """后退"""
+        for i in range(4):
+            self.motors[i].backward()
+
+    def turn_left(self) -> None:
+        """左转"""
+        self.motors[0].backward()
+        self.motors[1].forward()
+        self.motors[2].forward()
+        self.motors[3].backward()
+
+    def turn_right(self) -> None:
+        """右转"""
+        self.motors[0].forward()
+        self.motors[1].backward()
+        self.motors[2].backward()
+        self.motors[3].forward()
+
+
+class CameraSystem():
+    """摄像系统"""
+
+    def __init__(self) -> None:
+        self.camera = Camera()
+        self.pan_tilt = PanTilt()
+
+    def track(self, image) -> None:
+        """使摄像头瞄准目标物"""
+        pass
+
+    def autofocus(self) -> None:
+        """自动对焦"""
+        pass
 
 
 class Car():
@@ -107,13 +194,13 @@ class Car():
         # if camera_pin:
         #     self.camera = CameraSystem(camera_pin)            # 摄像头
         if infrareds_pin:
-            self.infrareds = ICInfraredSensor(infrareds_pin)  # 红外避障
+            self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
         if distance_pin:
-            self.distance = ICDistanceSensor(distance_pin)    # 超声波
+            self.distance = DistanceSensor(distance_pin)    # 超声波
         if lines_pin:
             self.lines = LineSystem(lines_pin)                # 巡线
         if buzzer_pin:
-            self.buzzer = ICTonalBuzzer(buzzer_pin)           # 音调蜂鸣器
+            self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
 
     def stop(self):
         """停止"""
