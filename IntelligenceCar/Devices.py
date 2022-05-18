@@ -158,9 +158,14 @@ class Camera():
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
+    def __del__(self):
+        self.camera.release()
+        cv2.destroyAllWindows()
+
     def shoot(self) -> None:
         """拍摄一张照片"""
-        pass
+        _, frame = self.camera.read()
+        return frame
 
     def upload(self) -> None:
         """上传照片"""
