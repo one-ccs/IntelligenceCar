@@ -5,7 +5,6 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-# import RPi.GPIO as GPIO
 from time import sleep
 
 from IntelligenceCar.Devices import InfraredSensor
@@ -21,7 +20,7 @@ from IntelligenceCar.Devices import PanTilt
 class InfraredSystem():
     """两个红外避障传感器组成的避障系统"""
 
-    def __init__(self, left_pin, right_pin) -> None:
+    def __init__(self, left_pin=None, right_pin=None):
         self.left = None
         self.right = None
 
@@ -34,7 +33,7 @@ class InfraredSystem():
 class LineSystem():
     """三个巡线传感器组成的巡线系统"""
 
-    def __init__(self, left_pin, mid_pin, right_pin) -> None:
+    def __init__(self, left_pin, mid_pin, right_pin):
         self.left = None
         self.mid = None
         self.right = None
@@ -55,21 +54,37 @@ class LineSystem():
 class Lights():
     """led 车灯"""
 
-    def __init__(self, left_pin, right_pin) -> None:
+    def __init__(self, left_pin, right_pin):
         self.lights = None
 
         if left_pin and right_pin:
             self.lights = LEDBoard(left_pin, right_pin, pwm=True)
 
-    def set(self, left_brightness=1.0, right_brightness=1.0) -> None:
+    def set(self, left_brightness=1.0, right_brightness=1.0):
         """同时调节两个 led 的亮度, 取值为 0.0 熄灭到 1.0 高亮。"""
         self.lights.value = (left_brightness, right_brightness)
 
-    def both_on(self) -> None:
+    def both_on(self):
         self.lights.on()
 
-    def both_off(self) -> None:
+    def both_off(self):
         self.lights.off()
+
+
+class CameraSystem():
+    """摄像系统"""
+
+    def __init__(self):
+        self.camera = Camera()
+        self.pan_tilt = PanTilt()
+
+    def track(self, image):
+        """使摄像头瞄准目标物"""
+        pass
+
+    def autofocus(self):
+        """自动对焦"""
+        pass
 
 
 class MotorSystem():
@@ -86,68 +101,52 @@ class MotorSystem():
         将电机的转速表示为 -100.0 (全速后退) 到 +100.0 (全速前进) 之间的浮点值。
     """
 
-    def __init__(self, pins=((None, None), (None, None), (None, None), (None, None))) -> None:
-        self._speed = 50.0 # 轮子转动速度百分比
-        self.motors = [None, None, None, None] # 左前、右前、右后、左后电机
+    def __init__(self, pins=((None, None), (None, None), (None, None), (None, None))):
+        self._speed = 50.0  # 轮子转动速度百分比
+        self.motors = [None, None, None, None]  # 左前、右前、右后、左后电机
 
         for i in range(4):
-            self.motors[i] = Motor(pins[i][0], pins[i][1])
+            self.motors[i] = Motor(pins[i][0], pins[i][1], i)
 
     @property
-    def speed(self) -> float:
+    def speed(self):
         return self._speed
 
     @speed.setter
-    def speed(self, speed: float) -> None:
+    def speed(self, speed):
         self._speed = speed
 
         for i in range(4):
             self.motors[i].speed = speed
 
-    def stop(self) -> None:
+    def stop(self):
         """停止"""
         for i in range(4):
             self.motors[i].stop()
 
-    def forward(self) -> None:
+    def forward(self):
         """前进"""
         for i in range(4):
             self.motors[i].forward()
 
-    def backward(self) -> None:
+    def backward(self):
         """后退"""
         for i in range(4):
             self.motors[i].backward()
 
-    def turn_left(self) -> None:
+    def turn_left(self):
         """左转"""
         self.motors[0].backward()
         self.motors[1].forward()
         self.motors[2].forward()
         self.motors[3].backward()
 
-    def turn_right(self) -> None:
+    def turn_right(self):
         """右转"""
         self.motors[0].forward()
         self.motors[1].backward()
         self.motors[2].backward()
         self.motors[3].forward()
-
-
-class CameraSystem():
-    """摄像系统"""
-
-    def __init__(self) -> None:
-        self.camera = Camera()
-        self.pan_tilt = PanTilt()
-
-    def track(self, image) -> None:
-        """使摄像头瞄准目标物"""
-        pass
-
-    def autofocus(self) -> None:
-        """自动对焦"""
-        pass
 
 
 class Car():
@@ -178,35 +177,34 @@ class Car():
     def __init__(
         self,
         wheels_pin=((None, None), (None, None), (None, None), (None, None)),
-        camera_pin=None,
-        infrareds_pin=(None, None),
-        distance_pin=(None, None),
-        lines_pin=(None, None, None),
-        buzzer_pin=None,
-        green_led_pin=None,
-        red_led_pin=None
-    ) -> None:
-        self._STEER_TIME = 0.0    # 车子旋转 1° 需要的秒数
-        self._STRAIGHT_TIME = 0.0  # 车子直行一单位 1cm 需要的秒数
+        # infrareds_pin=(None, None),
+        # distance_pin=(None, None),
+        # lines_pin=(None, None, None),
+        # buzzer_pin=None,
+        # green_led_pin=None,
+        # red_led_pin=None
+    ):
+        self._STEER_TIME = 0.2     # 车子旋转 1° 需要的秒数
+        self._STRAIGHT_TIME = 0.2  # 车子直行一单位 1cm 需要的秒数
 
         if wheels_pin:
             self.wheels = MotorSystem(wheels_pin)             # 车轮系统
         # if camera_pin:
         #     self.camera = CameraSystem(camera_pin)            # 摄像头
-        if infrareds_pin:
-            self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
-        if distance_pin:
-            self.distance = DistanceSensor(distance_pin)    # 超声波
-        if lines_pin:
-            self.lines = LineSystem(lines_pin)                # 巡线
-        if buzzer_pin:
-            self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
+        # if infrareds_pin:
+        #     self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
+        # if distance_pin:
+        #     self.distance = DistanceSensor(distance_pin)    # 超声波
+        # if lines_pin:
+        #     self.lines = LineSystem(lines_pin)                # 巡线
+        # if buzzer_pin:
+        #     self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
 
     def stop(self):
         """停止"""
         self.wheels.stop()
 
-    def forward(self, distance: int) -> None:
+    def forward(self, distance):
         """
         向前指定单位 1cm 的距离。
 
@@ -217,7 +215,7 @@ class Car():
         sleep(self._STRAIGHT_TIME * distance)
         self.wheels.stop()
 
-    def backward(self, distance: int) -> None:
+    def backward(self, distance):
         """
         向前指定单位 1cm 的距离。
 
@@ -228,7 +226,7 @@ class Car():
         sleep(self._STRAIGHT_TIME * distance)
         self.wheels.stop()
 
-    def turn_left(self, deg: int) -> None:
+    def turn_left(self, deg):
         """
         向左旋转指定度数。
 
@@ -239,7 +237,7 @@ class Car():
         sleep(self._STEER_TIME * deg)
         self.wheels.stop()
 
-    def turn_right(self, deg: int) -> None:
+    def turn_right(self, deg):
         """
         向右旋转指定度数。
 
