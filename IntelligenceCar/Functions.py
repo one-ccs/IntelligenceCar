@@ -4,6 +4,10 @@
 import RPi.GPIO as GPIO
 import time
 
+TIME_TURN_DEG = 0.07  # 旋转 1 度的秒数
+TIME_STRAIGHT = 0.07  # 直行 1 单位的秒数
+
+
 LEFT_FRONT_PIN = 22  # AIN1
 LEFT_REAR_PIN = 27   # AIN2
 LEFT_PWM_PIN = 18    # PWMA
@@ -40,7 +44,7 @@ def stop(t_time=3):
     time.sleep(t_time)
 
 
-def forward(speed=30, t_time=3):
+def forward(speed=35, t_time=3):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, False)
     GPIO.output(LEFT_FRONT_PIN, True)
@@ -51,7 +55,7 @@ def forward(speed=30, t_time=3):
     time.sleep(t_time)
 
 
-def backward(speed=30, t_time=3):
+def backward(speed=35, t_time=3):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, True)
     GPIO.output(LEFT_FRONT_PIN, False)
@@ -62,7 +66,7 @@ def backward(speed=30, t_time=3):
     time.sleep(t_time)
 
 
-def turn_left(speed=30, t_time=3):
+def turn_left(speed=35, t_time=3):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, True)
     GPIO.output(LEFT_FRONT_PIN, False)
@@ -73,7 +77,7 @@ def turn_left(speed=30, t_time=3):
     time.sleep(t_time)
 
 
-def turn_right(speed=30, t_time=3):
+def turn_right(speed=35, t_time=3):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, False)
     GPIO.output(LEFT_FRONT_PIN, True)
@@ -84,49 +88,49 @@ def turn_right(speed=30, t_time=3):
     time.sleep(t_time)
 
 
-def run1(speed=30, t_time=3, arg=False):
+def run1(speed=35, t_time=3, arg=False):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, arg)
     time.sleep(t_time)
 
 
-def run1_1(speed=30, t_time=3, arg=True):
+def run1_1(speed=35, t_time=3, arg=True):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, arg)
     time.sleep(t_time)
 
 
-def run2(speed=30, t_time=3, arg=False):
+def run2(speed=35, t_time=3, arg=False):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_FRONT_PIN, arg)
     time.sleep(t_time)
 
 
-def run2_2(speed=30, t_time=3, arg=True):
+def run2_2(speed=35, t_time=3, arg=True):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_FRONT_PIN, arg)
     time.sleep(t_time)
 
 
-def run3(speed=30, t_time=3, arg=False):
+def run3(speed=35, t_time=3, arg=False):
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(RIGHT_REAR_PIN, arg)
     time.sleep(t_time)
 
 
-def run3_3(speed=30, t_time=3, arg=True):
+def run3_3(speed=35, t_time=3, arg=True):
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(RIGHT_REAR_PIN, arg)
     time.sleep(t_time)
 
 
-def run4(speed=30, t_time=3, arg=False):
+def run4(speed=35, t_time=3, arg=False):
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(RIGHT_FRONT_PIN, arg)
     time.sleep(t_time)
 
 
-def run4_4(speed=30, t_time=3, arg=True):
+def run4_4(speed=35, t_time=3, arg=True):
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(RIGHT_FRONT_PIN, arg)
     time.sleep(t_time)

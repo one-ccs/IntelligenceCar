@@ -8,24 +8,16 @@ from IntelligenceCar.Functions import *
 def test1():
     """单轮测试"""
     run1()
-    sleep(2)
     run1_1()
-    sleep(2)
 
     run2()
-    sleep(2)
     run2_2()
-    sleep(2)
 
     run3()
-    sleep(2)
     run3_3()
-    sleep(2)
 
     run4()
-    sleep(2)
     run4_4()
-    sleep(2)
 
     stop()
 
