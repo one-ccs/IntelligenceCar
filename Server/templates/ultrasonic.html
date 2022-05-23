@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+</head>
+<body>
+    <div id="dist"></div>
+    <script>
+        dist = document.getElementById("dist");
+        var timer=setInterval(function (){
+            $.ajax({
+                url:'http://localhost:5000/showDistance',
+				type:"post",
+                success:function (data){
+                    dist.innerText=data
+                },error:function (e){
+                    console.log(e)
+                }
+            })
+        },1000)
+    </script>
+</body>
+</html>

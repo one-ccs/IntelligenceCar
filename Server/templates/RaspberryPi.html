@@ -11,14 +11,30 @@
 			<form action="http://localhost:5000/horn" method="post" id="Driver_submit">
 				<input type="button" value="自动驾驶功能" id="driver">
 			</form>
-			<input type="button" value="摄像头识别功能" id="Camera">
+			<form  action="http://localhost:5000/Vedio" id="CMA">
+				<input type="button" value="摄像头识别功能" id="Camera">
+			</form>
+
+			<form  action="http://localhost:5000/ultrasonic" id="ultrasonic">
+				<input type="button" value="超声波" id="ultrason">
+			</form>
+
 			<input type="button" value="物品追踪功能" id="Item_tracking">
+
 		</div>
 	</div>
 	<script>
 		driver=document.getElementById("driver");
 		driver.onclick=function (){
 			document.getElementById("Driver_submit").submit();
+		}
+		Camera=document.getElementById("Camera");
+		Camera.onclick=function(){
+			document.getElementById("CMA").submit();
+		}
+		ultrason=document.getElementById("ultrason");
+		ultrason.onclick=function (){
+			document.getElementById("ultrasonic").submit();
 		}
 	</script>
 </body>
