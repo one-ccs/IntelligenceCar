@@ -225,15 +225,15 @@ class Motor():
         """前进"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, True)
-        print('class Motor(' + self._id +') 正转, 速度 ' + self._speed)
+        print('class Motor(' + str(self._id) +') 正转, 速度 ' + str(self._speed))
 
     def backward(self):
         """后退"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, False)
-        print('class Motor(' + self._id +') 反转, 速度 ' + self._speed)
+        print('class Motor(' + str(self._id) +') 反转, 速度 ' + str(self._speed))
 
     def stop(self):
         """停止"""
         self.pwm.ChangeDutyCycle(0)
-        print('class Motor(' + self._id +') 停止')
+        print('class Motor(' + str(self._id) +') 停止')

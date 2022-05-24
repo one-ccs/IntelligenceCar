@@ -3,15 +3,17 @@
 #
 #  Server.py
 #
-from IntelligenceCar.Functions import *
 from flask import Flask, request, Response
 from flask import render_template
 import cv2
 
-from sys import path
-path.append(__file__[:-17])
+from os import path as op
+from sys import path as sp
+BASE_DIR = op.dirname(op.dirname(op.abspath(__file__))) #当前程序上上一级目录，这里为mycompany
+sp.append(BASE_DIR) #添加环境变量
+from IntelligenceCar.Functions import *
 
-PI = Flask(__name__)
+ic_server = Flask(__name__)
 
 
 class VideoCamera(object):
@@ -32,17 +34,17 @@ class VideoCamera(object):
         return jpeg.tobytes()
 
 
-@PI.route("/")
+@ic_server.route("/")
 def main():
     return render_template("RaspberryPi.html")  # 返回主界面
 
 
-@PI.route("/horn", methods=["POST", "GET"])  # 返回轨迹界面
+@ic_server.route("/horn", methods=["POST", "GET"])  # 返回轨迹界面
 def horn():
     return render_template("Horn.html")
 
 
-@PI.route("/getHorn", methods=["POST", "GET"])  # 获取轨迹数据
+@ic_server.route("/getHorn", methods=["POST", "GET"])  # 获取轨迹数据
 def getHorn():
     if request.method == "POST":
         data = request.get_json()
@@ -55,7 +57,7 @@ def getHorn():
             t2 = [0, i[1], 0]
             hData.append(t2)
 
-        if towards == 1:
+        if towards != "后":
             # 转向 180 度
             turn_left(t_time=TIME_TURN_DEG * 180)
 
@@ -74,7 +76,7 @@ def getHorn():
         return "不支持该请求方式"
 
 
-@PI.route('/Vedio')
+@ic_server.route('/Vedio')
 def index():
     # jinja2模板，具体格式保存在index.html文件中
     return render_template('Vedio.html')
@@ -88,21 +90,21 @@ def gen(camera):
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
-@PI.route('/video_feed')  # 这个地址返回视频流响应
+@ic_server.route('/video_feed')  # 这个地址返回视频流响应
 def video_feed():
     return Response(gen(VideoCamera()), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-@PI.route("/ultrasonic")
+@ic_server.route("/ultrasonic")
 def ultrasonic():
     return render_template("ultrasonic.html")
 
 
-@PI.route("/showDistance", methods=['POST', 'GET'])
+@ic_server.route("/showDistance", methods=['POST', 'GET'])
 def showDistance():
     # dis=距离
     dis = 0
     return str(dis)
 
 
-PI.run()
+ic_server.run()

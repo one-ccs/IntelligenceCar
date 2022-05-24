@@ -35,16 +35,14 @@
 
 		var canvas=document.getElementById("canvas");
 		var cxt=canvas.getContext("2d");
-		var radius=2;
+		var radius=14;
 		var falge=false;
 		//画板大小为屏幕大小
 		canvas.width=window.innerWidth;
 		canvas.height=window.innerHeight;
-		cxt.lineWidth=4;
+		cxt.lineWidth=30;
 		//添加监听对象
-		canvas.addEventListener("mousedown", start);
-		canvas.addEventListener("mouseup", stop);
-		canvas.addEventListener("mousemove", putPoint);
+		canvas.addEventListener("mouseup", start);
 	//////////
 	///清空画板
 		clear.onclick=function(){
@@ -52,7 +50,7 @@
 			buton.disabled=false;
 			canv=document.getElementById("canvas");
 			canvas.width=canvas.width;
-			cxt.lineWidth=4;
+			cxt.lineWidth=30;
 		}
 	//////////
 	///提交轨迹数据部分
@@ -63,16 +61,16 @@
 				alert("请在画板上画上轨迹哦");
 				return;
 			}
-
+			// alert(BetweenPointDistince([locus[0][0],locus[0][1]],[locus[1][0],locus[1][1]]));
 			this.disabled=true;
 			//初始化方向，初始化角度，初始化距离
 			initX=locus[0][0];initY=locus[0][1];//保存第首个坐标
 			if(initX>locus[1][0]){
 				console.log("小车向后旋转180度后");
-				Towards=-1;
+				Towards=-1;//后
 			}else
 			{
-				Towards=1;
+				Towards=1;//前
 			}
 			//轨迹的初始化
 			var initSlope=((initY-locus[1][1])/(initX-locus[1][0]));//计算初始斜率
@@ -94,23 +92,15 @@
 				var a=[locus[i-1][0],locus[i-1][1]];//分别表示三角形的三个点A点
 				var b=[locus[i][0],locus[i][1]];//B点
 				var c=[locus[i+1][0],locus[i+1][1]];//C点
-				var data=hornAndDisAndToward(a,b,c);
+				var data=hornAndDisAndToward(a,b,c);//计算轨迹数据
 				if(isNaN(data[0]))
 				{
 					continue;
 				}
 				hornAndDistanceAndTowards.push(data);
 			}
-            console.log(hornAndDistanceAndTowards);
-			for(var i=0;i<hornAndDistanceAndTowards.length;i++){//将所有的距离长度*5来匹配最小单位5px=1cm
-            if(hornAndDistanceAndTowards[i][2]==-1)
-                t="左转"
-            else
-                t="右转"
-            
-            console.log(t+hornAndDistanceAndTowards[i][0]+"度"+hornAndDistanceAndTowards[i][1]+"cm")
-			}
-
+			console.log(hornAndDistanceAndTowards)
+			console.log(locus)
 			var data={toward:Towards,data:hornAndDistanceAndTowards}
 			$.ajax({
 				url:'http://localhost:5000/getHorn',
@@ -184,29 +174,31 @@
 				return -1;
 			}
 		}
+  //   	function putPoint(e){
+		// 	if(falge){
+		// 		cxt.lineTo(e.clientX, e.clientY);
+		// 		cxt.stroke();
+		// 		cxt.beginPath();
+		// 		cxt.arc(e.clientX, e.clientY, radius, 0, 360, false);
+		// 		cxt.fill();
+		// 		cxt.beginPath();
+		// 		XY=[e.clientX, e.clientY]
+		// 		locus.push(XY);
+		// 		cxt.moveTo(e.clientX, e.clientY);
 
-    	function putPoint(e){
-			if(falge){
-				cxt.lineTo(e.clientX, e.clientY);
-				cxt.stroke();
-				cxt.beginPath();
-				cxt.arc(e.clientX, e.clientY, radius, 0, 360, false);
-				cxt.fill();
-				cxt.beginPath();
-				XY=[e.clientX, e.clientY]
-				locus.push(XY);
-				cxt.moveTo(e.clientX, e.clientY);
-
-			}
-		}
+		// 	}
+		// }
  
 		function start(e){
-			falge=true;
-			putPoint(e);
-		}
-		function stop(){
-			falge=false;
+			cxt.lineTo(e.clientX, e.clientY);
+			cxt.stroke();
 			cxt.beginPath();
+			cxt.arc(e.clientX, e.clientY, radius, 0, 360, false);
+			cxt.fill();
+			cxt.beginPath();
+			XY=[e.clientX, e.clientY]
+			locus.push(XY);
+			cxt.moveTo(e.clientX, e.clientY);
 		}
 
 	</script>

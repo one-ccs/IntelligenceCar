@@ -3,8 +3,8 @@
 #
 from IntelligenceCar.Car import Car
 
-# 电机针脚 ((左前, 左 pwm), (右前, 右 pwm), (右后, 右 pwm), (左后, 左 pwm))
-WHEELS_PIN = ((22, 18), (25, 23), (24, 23), (27, 18))
+# 电机针脚 ((左前 pwm, 左前方向), (右前 pwm, 右前方向), (右后 pwm, 右后方向), (左后 pwm, 左后方向))
+WHEELS_PIN = ((18, 22), (23, 25), (23, 24), (18, 27))
 
 car = Car(WHEELS_PIN)
 
