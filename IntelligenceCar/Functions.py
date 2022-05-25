@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 import RPi.GPIO as GPIO
+from datetime import datetime
 import time
 
 # 单位常量
@@ -20,7 +21,7 @@ INFRAREDS_LEFT_PIN = 12
 INFRAREDS_RIGHT_PIN = 16
 # 超声波传感器针脚
 DISTANCE_ECHO_PIN = 21
-DISTANCE_TRIGGER_PIN = 21
+DISTANCE_TRIGGER_PIN = 20
 # 寻线传感器针脚
 LINES_LEFT_PIN = 13
 LINES_MID_PIN = None
@@ -48,8 +49,14 @@ R_Motor = GPIO.PWM(RIGHT_PWM_PIN, 100)
 R_Motor.start(0)
 
 
+def logger(info):
+    """给日志加上时间"""
+    print('[ {} ] : {}.'.format(datetime.now, info))
+
+
 # 电机
 def stop(t_time=3):
+    logger('停止')
     L_Motor.ChangeDutyCycle(0)
     GPIO.output(LEFT_REAR_PIN, False)
     GPIO.output(LEFT_FRONT_PIN, False)
@@ -61,6 +68,7 @@ def stop(t_time=3):
 
 
 def forward(speed=35, t_time=3):
+    logger('前进')
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, False)
     GPIO.output(LEFT_FRONT_PIN, True)
@@ -72,6 +80,7 @@ def forward(speed=35, t_time=3):
 
 
 def backward(speed=35, t_time=3):
+    logger('后退')
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, True)
     GPIO.output(LEFT_FRONT_PIN, False)
@@ -83,6 +92,7 @@ def backward(speed=35, t_time=3):
 
 
 def turn_left(speed=35, t_time=3):
+    logger('左转')
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, True)
     GPIO.output(LEFT_FRONT_PIN, False)
@@ -94,6 +104,7 @@ def turn_left(speed=35, t_time=3):
 
 
 def turn_right(speed=35, t_time=3):
+    logger('右转')
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(LEFT_REAR_PIN, False)
     GPIO.output(LEFT_FRONT_PIN, True)
@@ -155,6 +166,7 @@ def run4_4(speed=35, t_time=3, arg=True):
 # 蜂鸣器
 def setup_buzzer():
     """初始化蜂鸣器"""
+    logger('安装蜂鸣器')
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(BUZZER_PIN, GPIO.OUT)
@@ -165,6 +177,7 @@ def setup_buzzer():
 
 def clean_buzzer():
     """清理蜂鸣器资源"""
+    logger('卸载蜂鸣器')
     buzzer_pwm.stop()
     GPIO.output(buzzer_pwm, 1)
     GPIO.cleanup(BUZZER_PIN)
@@ -189,20 +202,146 @@ def play_song():
         1, 1, 3
     ]  # 八分之一拍
 
-    setup_buzzer()
     for i in range(2):
         for i in range(1, len(song)):
             buzzer_pwm.ChangeFrequency(song[i])
             time.sleep(beat[i] * 0.5)
         time.sleep(1)
-    clean_buzzer()
 
 
 # 巡线传感器
-def setup_line():
+def setup_lines():
+    logger('安装巡线传感器')
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(GREEN_LED, GPIO.OUT)
     GPIO.setup(RED_LED, GPIO.OUT)
     GPIO.setup(LINES_LEFT_PIN, GPIO.IN)
     GPIO.setup(LINES_RIGHT_PIN, GPIO.IN)
+
+
+def clean_lines():
+    logger('卸载巡线传感器')
+    GPIO.cleanup(GREEN_LED)
+    GPIO.cleanup(RED_LED)
+    GPIO.cleanup(LINES_LEFT_PIN)
+    GPIO.cleanup(LINES_RIGHT_PIN)
+
+
+def get_lines_state():
+    ret_left = GPIO.input(LINES_LEFT_PIN)
+    ret_right = GPIO.input(LINES_RIGHT_PIN)
+
+    logger('获取巡线传感器状态 (左: {}, 右: {}).'.format(ret_left, ret_right))
+    return (ret_left, ret_right)
+
+
+def start_line():
+    """开始巡线程序"""
+    for i in range(99):
+        lines_state = get_lines_state()
+
+        if lines_state == (False, False):
+            forward()
+        elif lines_state == (True, False):
+            turn_left()
+        elif lines_state == (False, True):
+            turn_right()
+        else:
+            stop()
+
+
+# 红外避障传感器
+def setup_infrareds():
+    logger('安装红外避障传感器')
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(GREEN_LED, GPIO.OUT)
+    GPIO.setup(RED_LED, GPIO.OUT)
+    GPIO.setup(INFRAREDS_LEFT_PIN, GPIO.IN)
+    GPIO.setup(INFRAREDS_RIGHT_PIN, GPIO.IN)
+
+
+def clean_infrareds():
+    logger('卸载红外避障传感器')
+    GPIO.cleanup(GREEN_LED)
+    GPIO.cleanup(RED_LED)
+    GPIO.cleanup(INFRAREDS_LEFT_PIN)
+    GPIO.cleanup(INFRAREDS_RIGHT_PIN)
+
+
+def get_infrared_state():
+    ret_left = GPIO.input(INFRAREDS_LEFT_PIN)
+    ret_right = GPIO.input(INFRAREDS_RIGHT_PIN)
+
+    logger('获取红外避障传感器状态 (左: {}, 右: {}).'.format(ret_left, ret_right))
+    return (ret_left, ret_right)
+
+
+def start_infrared():
+    """开始红外避障"""
+    for i in range(99):
+        infrared_state = get_infrared_state()
+
+        if infrared_state == (True, True):
+            forward()
+        elif infrared_state == (True, False):
+            turn_left()
+        elif infrared_state == (False, True):
+            turn_right()
+        else:
+            backward(t_time=0.5)
+            turn_left(t_time=0.5)
+
+
+# 超声波传感器
+def setup_distance():
+    logger('安装超声波传感器')
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(DISTANCE_ECHO_PIN, GPIO.OUT)
+    GPIO.setup(DISTANCE_TRIGGER_PIN, GPIO.IN)
+
+
+def clean_distance():
+    logger('卸载超声波传感器')
+    GPIO.cleanup(DISTANCE_ECHO_PIN)
+    GPIO.cleanup(DISTANCE_TRIGGER_PIN)
+
+
+def get_distance():
+    """获取超声波传感器数值"""
+    GPIO.output(DISTANCE_TRIGGER_PIN, 0)
+    time.sleep(0.000002)
+
+    GPIO.output(DISTANCE_TRIGGER_PIN, 1)
+    time.sleep(0.00001)
+    GPIO.output(DISTANCE_TRIGGER_PIN, 0)
+
+    while GPIO.input(DISTANCE_ECHO_PIN) == 0:
+        pass
+    start_time = time.time()
+    while GPIO.input(DISTANCE_ECHO_PIN) == 1:
+        pass
+    end_time = time.time()
+
+    during = end_time - start_time
+    distance = during * 340 / 2 * 100
+
+    logger('获取超声波传感器数值: {} cm.'.format(distance))
+    return distance
+
+
+def start_distance():
+    """开始超声波避障"""
+    for i in range(99):
+        dis = get_distance()
+        
+        if (dis < 40) == True:
+            while (dis < 40) == True:
+                backward(t_time=0.5)
+                turn_right(t_time=0.5)
+
+                dis = get_distance()
+        else:
+            forward(t_time=0)
