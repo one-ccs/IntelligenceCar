@@ -43,6 +43,42 @@ def test4():
     forward(15, 10)
 
 
+def test5():
+    setup_infrareds()
+    start_infrared()
+    clean_infrareds()
+
+
+def test6():
+    setup_distance()
+    start_distance()
+    clean_distance()
+
+
+def test7():
+    setup_lines()
+    start_line()
+    clean_lines()
+
+
+def test8():
+    setup_buzzer()
+    play_song()
+    clean_buzzer()
+
+
+def test8():
+    green = False
+    red = True
+
+    for i in range(10):
+        set_green_led(not green)
+        set_red_led(not red)
+
+        green = not green
+        red = not red
+
+
 def main():
     test1()
 

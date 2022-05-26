@@ -29,8 +29,8 @@ LINES_RIGHT_PIN = 26
 # 蜂鸣器针脚常量
 BUZZER_PIN = 11
 # LED 针脚
-GREEN_LED = 5
-RED_LED = 6
+GREEN_LED_PIN = 5
+RED_LED_PIN = 6
 
 
 GPIO.setwarnings(False)
@@ -51,7 +51,7 @@ R_Motor.start(0)
 
 def logger(info):
     """给日志加上时间"""
-    print('[ {} ] : {}.'.format(datetime.now, info))
+    print('[ {} ] : {}.'.format(datetime.now(), info))
 
 
 # 电机
@@ -214,16 +214,12 @@ def setup_lines():
     logger('安装巡线传感器')
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(GREEN_LED, GPIO.OUT)
-    GPIO.setup(RED_LED, GPIO.OUT)
     GPIO.setup(LINES_LEFT_PIN, GPIO.IN)
     GPIO.setup(LINES_RIGHT_PIN, GPIO.IN)
 
 
 def clean_lines():
     logger('卸载巡线传感器')
-    GPIO.cleanup(GREEN_LED)
-    GPIO.cleanup(RED_LED)
     GPIO.cleanup(LINES_LEFT_PIN)
     GPIO.cleanup(LINES_RIGHT_PIN)
 
@@ -242,13 +238,13 @@ def start_line():
         lines_state = get_lines_state()
 
         if lines_state == (False, False):
-            forward()
+            forward(t_time=0)
         elif lines_state == (True, False):
-            turn_left()
+            turn_left(t_time=0)
         elif lines_state == (False, True):
-            turn_right()
+            turn_right(t_time=0)
         else:
-            stop()
+            stop(t_time=0)
 
 
 # 红外避障传感器
@@ -256,16 +252,12 @@ def setup_infrareds():
     logger('安装红外避障传感器')
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(GREEN_LED, GPIO.OUT)
-    GPIO.setup(RED_LED, GPIO.OUT)
     GPIO.setup(INFRAREDS_LEFT_PIN, GPIO.IN)
     GPIO.setup(INFRAREDS_RIGHT_PIN, GPIO.IN)
 
 
 def clean_infrareds():
     logger('卸载红外避障传感器')
-    GPIO.cleanup(GREEN_LED)
-    GPIO.cleanup(RED_LED)
     GPIO.cleanup(INFRAREDS_LEFT_PIN)
     GPIO.cleanup(INFRAREDS_RIGHT_PIN)
 
@@ -334,14 +326,76 @@ def get_distance():
 
 def start_distance():
     """开始超声波避障"""
+    DIS = 20
+
     for i in range(99):
         dis = get_distance()
         
-        if (dis < 40) == True:
-            while (dis < 40) == True:
+        if (dis < DIS) == True:
+            while (dis < DIS) == True:
                 backward(t_time=0.5)
                 turn_right(t_time=0.5)
 
                 dis = get_distance()
         else:
             forward(t_time=0)
+
+
+def start_dis_inf():
+    """超声波及红外混合避障"""
+    DIS = 20
+
+    for i in range(99):
+        dis = get_distance()
+        
+        if (dis < DIS) == True:
+            while (dis < DIS) == True:
+                infrared_state = get_infrared_state()
+                
+                if infrared_state == (True, True):
+                    forward()
+                elif infrared_state == (True, False):
+                    turn_left()
+                elif infrared_state == (False, True):
+                    turn_right()
+                else:
+                    backward(t_time=0.5)
+                    turn_left(t_time=0.5)
+
+                dis = get_distance()
+        else:
+            forward(t_time=0)
+
+
+
+# LED
+def setup_led():
+    logger('安装 led')
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(GREEN_LED_PIN, GPIO.OUT)
+    GPIO.setup(RED_LED_PIN, GPIO.OUT)
+
+
+def clean_led():
+    logger('卸载 led')
+    GPIO.cleanup(GREEN_LED_PIN)
+    GPIO.cleanup(RED_LED_PIN)
+
+
+def set_green_led(state):
+    if state == True:
+        GPIO.output(GREEN_LED_PIN, 1)
+        logger('打开绿色 led')
+    else:
+        GPIO.output(GREEN_LED_PIN, 0)
+        logger('关闭绿色 led')
+
+
+def set_red_led(state):
+    if state == True:
+        GPIO.output(RED_LED_PIN, 1)
+        logger('打开红色 led')
+    else:
+        GPIO.output(RED_LED_PIN, 0)
+        logger('关闭红色 led')

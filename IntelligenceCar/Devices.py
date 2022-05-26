@@ -5,11 +5,22 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
+from datetime import datetime
 import RPi.GPIO as GPIO
 import gpiozero as gz
 
 # import Adafruit_PCA9685
 # import cv2
+
+
+class Logger():
+    """包含常用日志函数"""
+
+    def __init__(self) -> None:
+        pass
+
+    def log(self, info, level=0):
+        print('[ {} ] : {}.'.format(datetime.now(), info))
 
 
 class DistanceSensor(gz.DistanceSensor):
@@ -167,7 +178,7 @@ class PanTilt():
         self.vertical = coordinate['x']
 
 
-class Motor():
+class Motor(Logger):
     """电机
 
     :参数 整型 p_pin:
@@ -178,9 +189,11 @@ class Motor():
     """
 
     def __init__(self, p_pin, f_pin, id=None):
-        self._id = id
+        self.log('<class Motor 正在初始化, p_pin: {}, f_pin: {}, id: {}.>'.format(
+            p_pin, f_pin, id))
         self._speed = 30.0       # 转速占空比
         self._frequency = 100.0  # pwm 频率 (Hz)
+        self._id = id
 
         self.p_pin = p_pin
         self.f_pin = f_pin
@@ -209,7 +222,7 @@ class Motor():
             raise ValueError("无效的参数 speed, 应为 -100.0 到 +100.0 之间的数字。")
         else:
             self._speed = speed
-            print('class Motor(' + self._id +') 设置速度 ' + self._speed)
+            self.log('class Motor(' + str(self._id) + ') 设置速度 ' + str(self._speed))
 
     @property
     def frequency(self):
@@ -225,15 +238,15 @@ class Motor():
         """前进"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, True)
-        print('class Motor(' + str(self._id) +') 正转, 速度 ' + str(self._speed))
+        self.log('<class Motor(' + str(self._id) + ') 正转, 速度 ' + str(self._speed) + '>')
 
     def backward(self):
         """后退"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, False)
-        print('class Motor(' + str(self._id) +') 反转, 速度 ' + str(self._speed))
+        self.log('<class Motor(' + str(self._id) + ') 反转, 速度 ' + str(self._speed) + '>')
 
     def stop(self):
         """停止"""
         self.pwm.ChangeDutyCycle(0)
-        print('class Motor(' + str(self._id) +') 停止')
+        self.log('<class Motor(' + str(self._id) + ') 停止>')
