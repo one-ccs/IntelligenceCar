@@ -82,9 +82,6 @@ class Car(Logger):
         distance_servo_pin=None,
         camera_servos_pin=(None, None)
     ):
-        self._green_light = False
-        self._red_light = False
-
         self.wheels = None
         self.infrareds = None
         self.distance = None
