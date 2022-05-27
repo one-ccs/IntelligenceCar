@@ -3,30 +3,17 @@
 #
 #  Server.py
 #
+from flask import Flask, request, Response, render_template
 import random
-from flask import Flask, request, Response
-from flask import render_template
-# from flask_cors import CORS
 import cv2
 
 from os import path as op
 from sys import path as sp
-BASE_DIR = op.dirname(
-    op.dirname(op.abspath(__file__))
-)  # 当前程序上上一级目录，这里为mycompany
-sp.append(BASE_DIR)  # 添加环境变量
+sp.append(op.dirname(op.dirname(op.abspath(__file__))))  # 添加环境变量为上级目录
 from IntelligenceCar.Functions import *
-from IntelligenceCar.Pins import *
-from IntelligenceCar.Car import Car
 
 ic_server = Flask(__name__, static_folder='./static')
-# CORS(ic_server)
-car = Car(
-    (
-        (LEFT_FRONT_PIN, LEFT_REAR_PIN), LEFT_PWM_PIN,
-        (RIGHT_FRONT_PIN, RIGHT_REAR_PIN), RIGHT_PWM_PIN
-    )
-)
+global_car = None
 
 
 class VideoCamera(object):
@@ -106,16 +93,16 @@ def getHorn():
         for line in hData:
             if line[2] == -1:  # 左转
                 turn_left(t_time=TIME_TURN_DEG * line[0])
-                # car.turn_left(line[0])
+                # global_car.turn_left(line[0])
             elif line[2] == 1:  # 右转
                 turn_right(t_time=TIME_TURN_DEG * line[0])
-                # car.turn_right(line[0])
+                # global_car.turn_right(line[0])
             else:  # 直行
                 forward(t_time=TIME_STRAIGHT * line[1])
-                # car.forward(line[1])
+                # global_car.forward(line[1])
 
         stop()
-        # car.stop()
+        # global_car.stop()
 
         return "OK"
     else:
@@ -162,7 +149,7 @@ def ultrasonic():
 @ic_server.route("/showDistance", methods=['POST', 'GET'])
 def showDistance():
     # dis=get_distance()
-    dis = car.get_distance()
+    dis = global_car.get_distance()
     dis = random.random()
     return str(dis)
 
@@ -188,13 +175,13 @@ def ctrl():
         data = request.get_json()
         t = data['ctrl']
         # forward(t_time=1.5)
-        car.forward(1.5)
+        global_car.forward(1.5)
         # backward(t_time=1.5)
-        car.backward(1.5)
+        global_car.backward(1.5)
         # turn_left(t_time=0.3)
-        car.turn_left(0.3)
+        global_car.turn_left(0.3)
         # turn_right(t_time=0.3)
-        car.turn_right(0.3)
+        global_car.turn_right(0.3)
     else:
         return "No"
 
@@ -205,4 +192,9 @@ def tracing():
     return "tracing"
 
 
-ic_server.run(host='0.0.0.0')
+def run(car):
+    """启动服务器"""
+    global global_car
+
+    global_car = car
+    ic_server.run(host='0.0.0.0')

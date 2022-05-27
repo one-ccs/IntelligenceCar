@@ -8,7 +8,11 @@
 from time import sleep
 
 from Logger import Logger
+from Devices import InfraredSensor
+from Devices import DistanceSensor
+from Devices import TonalBuzzer
 from Plugins import MotorSystem
+from Plugins import LineSystem
 
 
 # 电机针脚常量
@@ -38,10 +42,10 @@ RED_LED = 6
 class Car(Logger):
     """智能小车
 
-    :参数 整型二维元组 wheels_pin:
+    :参数 整型元组 wheels_pin:
         四个电机的针脚 (
-            (左前速度, 左前方向), (右前速度, 右前方向),
-            (右后速度, 右后方向), (左后速度, 左后方向)
+            (左电机 1, 左电机 2), 左 pwm,
+            (右电机 1, 右电机 2), 右 pwm
         )。
 
     :参数 整型元组 infrareds_pin:
@@ -62,12 +66,12 @@ class Car(Logger):
     def __init__(
         self,
         wheels_pin=((None, None), None, (None, None), None),
-        # infrareds_pin=(None, None),
-        # distance_pin=(None, None),
-        # lines_pin=(None, None, None),
-        # buzzer_pin=None,
-        # green_led_pin=None,
-        # red_led_pin=None
+        infrareds_pin=(None, None),
+        distance_pin=(None, None),
+        lines_pin=(None, None, None),
+        buzzer_pin=None,
+        green_led_pin=None,
+        red_led_pin=None
     ):
         self.wheels = None
         self.infrareds = None
@@ -76,15 +80,15 @@ class Car(Logger):
         self.buzzer = None
 
         if wheels_pin:
-            self.wheels = MotorSystem(wheels_pin)             # 车轮系统
-        # if infrareds_pin:
-        #     self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
-        # if distance_pin:
-        #     self.distance = DistanceSensor(distance_pin)    # 超声波
-        # if lines_pin:
-        #     self.lines = LineSystem(lines_pin)                # 巡线
-        # if buzzer_pin:
-        #     self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
+            self.wheels = MotorSystem(wheels_pin)           # 车轮系统
+        if infrareds_pin:
+            self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
+        if distance_pin:
+            self.distance = DistanceSensor(distance_pin)    # 超声波
+        if lines_pin:
+            self.lines = LineSystem(lines_pin)              # 巡线
+        if buzzer_pin:
+            self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
 
     def stop(self):
         """停止"""

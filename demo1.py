@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-from IntelligenceCar.Car import Car
-from IntelligenceCar.Pins import *
+from IntelligenceCar.Car import *
 
 car = Car(
     (
@@ -20,6 +19,9 @@ def test1():
 def test2():
     """移动测试"""
     car.forward(10)
+    car.backward(10)
+    car.turn_left(360)
+    car.turn_right(360)
 
 
 def test3():
