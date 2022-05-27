@@ -10,6 +10,7 @@ from os import path as op
 from sys import path as sp
 sp.append(op.dirname(op.dirname(op.abspath(__file__))))  # 添加环境变量为上级目录
 from IntelligenceCar.Functions import *
+import Done
 
 ic_server = Flask(__name__, static_folder='./static')
 
@@ -109,8 +110,9 @@ def getHorn():
 
 @ic_server.route('/Vedio')
 def index():
+    Done.run()
     # jinja2模板，具体格式保存在index.html文件中
-    return render_template('Vedio.html')
+    return "窗口已关闭"
 
 
 def gen(camera):

@@ -7,6 +7,7 @@
 #
 from datetime import datetime
 
+
 class Logger():
     """包含常用日志函数"""
 
@@ -14,4 +15,8 @@ class Logger():
         pass
 
     def log(self, info, level=0):
-        print('[ {} ] : {}.'.format(str(datetime.now())[11:], info))
+        print('[ {} ] : <class {}> {}.'.format(
+            str(datetime.now())[11:],
+            self.__class__.__name__,
+            info)
+        )

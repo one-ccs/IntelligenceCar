@@ -6,7 +6,7 @@
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
 import RPi.GPIO as GPIO
-from Logger import Logger
+from IntelligenceCar.Plugins.Logger import Logger
 
 class MotorSystem(Logger):
     """

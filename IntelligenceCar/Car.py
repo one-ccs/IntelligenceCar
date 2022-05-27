@@ -7,13 +7,13 @@
 #
 from time import sleep
 
-from Devices.InfraredSensor import InfraredSensor
-from Devices.DistanceSensor import DistanceSensor
-from Devices.LEDBoard import LEDBoard
-from Devices.TonalBuzzer import TonalBuzzer
-from Plugins.Logger import Logger
-from Plugins.MotorSystem import MotorSystem
-from Plugins.LineSystem import LineSystem
+from IntelligenceCar.Devices.DistanceSensor import DistanceSensor
+from IntelligenceCar.Devices.LEDBoard import LEDBoard
+from IntelligenceCar.Devices.TonalBuzzer import TonalBuzzer
+from IntelligenceCar.Plugins.Logger import Logger
+from IntelligenceCar.Plugins.MotorSystem import MotorSystem
+from IntelligenceCar.Plugins.InfraredSystem import InfraredSystem
+from IntelligenceCar.Plugins.LineSystem import LineSystem
 
 
 # 电机针脚常量
@@ -83,18 +83,30 @@ class Car(Logger):
         self.lights = None
         self.buzzer = None
 
-        if wheels_pin:
-            self.wheels = MotorSystem(wheels_pin)             # 车轮系统
-        if infrareds_pin:
-            self.infrareds = InfraredSensor(infrareds_pin)    # 红外避障
-        if distance_pin:
-            self.distance = DistanceSensor(distance_pin)      # 超声波
-        if lines_pin:
-            self.lines = LineSystem(lines_pin)                # 巡线
-        if leds_pin:
-            self.lights = LEDBoard(leds_pin[0], leds_pin[1])  # LED
-        if buzzer_pin:
-            self.buzzer = TonalBuzzer(buzzer_pin)             # 音调蜂鸣器
+        if wheels_pin != ((None, None), None, (None, None), None):
+            # 车轮系统
+            self.log('安装车轮系统, 针脚: {}'.format(wheels_pin))
+            self.wheels = MotorSystem(wheels_pin)
+        if infrareds_pin != (None, None):
+            # 红外避障
+            self.log('安装红外避障系统, 针脚: {}'.format(infrareds_pin))
+            self.infrareds = InfraredSystem(infrareds_pin[0], infrareds_pin[1])
+        if distance_pin != (None, None):
+            # 超声波
+            self.log('安装超声波模块, 针脚: {}'.format(distance_pin))
+            self.distance = DistanceSensor(distance_pin[0], distance_pin[1])
+        if lines_pin != (None, None, None):
+            # 巡线
+            self.log('安装巡线系统, 针脚: {}'.format(lines_pin))
+            self.lines = LineSystem(lines_pin[0], lines_pin[1], lines_pin[2])
+        if leds_pin != (None, None):
+            # LED
+            self.log('安装 LED, 针脚: {}'.format(leds_pin))
+            self.lights = LEDBoard(leds_pin[0], leds_pin[1])
+        if buzzer_pin != None:
+            # 音调蜂鸣器
+            self.log('安装蜂鸣器, 针脚: {}'.format(buzzer_pin))
+            self.buzzer = TonalBuzzer(buzzer_pin)
 
     def stop(self):
         """停止"""
