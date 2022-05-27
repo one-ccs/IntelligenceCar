@@ -7,12 +7,13 @@
 #
 from time import sleep
 
-from Logger import Logger
-from Devices import InfraredSensor
-from Devices import DistanceSensor
-from Devices import TonalBuzzer
-from Plugins import MotorSystem
-from Plugins import LineSystem
+from Devices.InfraredSensor import InfraredSensor
+from Devices.DistanceSensor import DistanceSensor
+from Devices.LEDBoard import LEDBoard
+from Devices.TonalBuzzer import TonalBuzzer
+from Plugins.Logger import Logger
+from Plugins.MotorSystem import MotorSystem
+from Plugins.LineSystem import LineSystem
 
 
 # 电机针脚常量
@@ -69,26 +70,31 @@ class Car(Logger):
         infrareds_pin=(None, None),
         distance_pin=(None, None),
         lines_pin=(None, None, None),
-        buzzer_pin=None,
-        green_led_pin=None,
-        red_led_pin=None
+        leds_pin=(None, None),
+        buzzer_pin=None
     ):
+        self._green_light = False
+        self._red_light = False
+
         self.wheels = None
         self.infrareds = None
         self.distance = None
         self.lines = None
+        self.lights = None
         self.buzzer = None
 
         if wheels_pin:
-            self.wheels = MotorSystem(wheels_pin)           # 车轮系统
+            self.wheels = MotorSystem(wheels_pin)             # 车轮系统
         if infrareds_pin:
-            self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
+            self.infrareds = InfraredSensor(infrareds_pin)    # 红外避障
         if distance_pin:
-            self.distance = DistanceSensor(distance_pin)    # 超声波
+            self.distance = DistanceSensor(distance_pin)      # 超声波
         if lines_pin:
-            self.lines = LineSystem(lines_pin)              # 巡线
+            self.lines = LineSystem(lines_pin)                # 巡线
+        if leds_pin:
+            self.lights = LEDBoard(leds_pin[0], leds_pin[1])  # LED
         if buzzer_pin:
-            self.buzzer = TonalBuzzer(buzzer_pin)           # 音调蜂鸣器
+            self.buzzer = TonalBuzzer(buzzer_pin)             # 音调蜂鸣器
 
     def stop(self):
         """停止"""
@@ -150,3 +156,13 @@ class Car(Logger):
     def get_distance(self):
         """获取超声波传感器数值, 单位 cm."""
         return self.distance.get_value()
+
+    def turn_both_light_on(self):
+        pass
+
+    def turn_both_light_off(self):
+        pass
+
+    def turn_light_alternate(self):
+        """交替闪烁"""
+        pass

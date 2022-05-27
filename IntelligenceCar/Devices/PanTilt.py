@@ -5,7 +5,7 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-from IntelligenceCar.Devices import Servo
+from Servo import Servo
 
 class PanTilt():
     """云台"""

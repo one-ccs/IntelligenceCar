@@ -5,8 +5,8 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-from IntelligenceCar.Devices import Camera
-from IntelligenceCar.Devices import PanTilt
+from IntelligenceCar.Devices.Camera import Camera
+from IntelligenceCar.Devices.PanTilt import PanTilt
 
 class CameraSystem():
     """摄像系统"""

@@ -7,7 +7,7 @@
 #
 import RPi.GPIO as GPIO
 
-from IntelligenceCar import Logger
+from IntelligenceCar.Plugins.Logger import Logger
 
 
 class Motor(Logger):

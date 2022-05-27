@@ -5,7 +5,7 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-from IntelligenceCar.Devices import LEDBoard
+from IntelligenceCar.Devices.LEDBoard import LEDBoard
 
 class Lights():
     """led 车灯"""

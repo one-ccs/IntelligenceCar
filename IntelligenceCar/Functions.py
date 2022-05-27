@@ -51,7 +51,7 @@ R_Motor.start(0)
 
 def logger(info):
     """给日志加上时间"""
-    print('[ {} ] : {}.'.format(datetime.now(), info))
+    print('[ {} ] : {}.'.format(str(datetime.now())[11:], info))
 
 
 # 电机
@@ -112,54 +112,6 @@ def turn_right(speed=35, t_time=3):
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(RIGHT_REAR_PIN, True)
     GPIO.output(RIGHT_FRONT_PIN, False)
-    time.sleep(t_time)
-
-
-def run1(speed=35, t_time=3, arg=False):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(LEFT_REAR_PIN, arg)
-    time.sleep(t_time)
-
-
-def run1_1(speed=35, t_time=3, arg=True):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(LEFT_REAR_PIN, arg)
-    time.sleep(t_time)
-
-
-def run2(speed=35, t_time=3, arg=False):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(LEFT_FRONT_PIN, arg)
-    time.sleep(t_time)
-
-
-def run2_2(speed=35, t_time=3, arg=True):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(LEFT_FRONT_PIN, arg)
-    time.sleep(t_time)
-
-
-def run3(speed=35, t_time=3, arg=False):
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(RIGHT_REAR_PIN, arg)
-    time.sleep(t_time)
-
-
-def run3_3(speed=35, t_time=3, arg=True):
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(RIGHT_REAR_PIN, arg)
-    time.sleep(t_time)
-
-
-def run4(speed=35, t_time=3, arg=False):
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(RIGHT_FRONT_PIN, arg)
-    time.sleep(t_time)
-
-
-def run4_4(speed=35, t_time=3, arg=True):
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(RIGHT_FRONT_PIN, arg)
     time.sleep(t_time)
 
 
@@ -353,12 +305,16 @@ def start_dis_inf():
                 infrared_state = get_infrared_state()
 
                 if infrared_state == (True, True):
-                    forward()
+                    logger('混合避障: 停止, 距离 {}'.format(dis))
+                    stop()
                 elif infrared_state == (True, False):
+                    logger('混合避障: 左转, 距离 {}'.format(dis))
                     turn_left()
                 elif infrared_state == (False, True):
+                    logger('混合避障: 右转, 距离 {}'.format(dis))
                     turn_right()
                 else:
+                    logger('混合避障: 后退并左转, 距离 {}'.format(dis))
                     backward(t_time=0.5)
                     turn_left(t_time=0.5)
 
@@ -398,3 +354,16 @@ def set_red_led(state):
     else:
         GPIO.output(RED_LED_PIN, 0)
         logger('关闭红色 led')
+
+
+def start_led():
+    """led 交替闪烁"""
+    green = False
+    red = True
+
+    for i in range(10):
+        set_green_led(not green)
+        set_red_led(not red)
+
+        green = not green
+        red = not red

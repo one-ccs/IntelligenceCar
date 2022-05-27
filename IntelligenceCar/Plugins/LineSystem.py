@@ -5,7 +5,7 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-from IntelligenceCar.Devices import LineSensor
+from IntelligenceCar.Devices.LineSensor import LineSensor
 
 
 class LineSystem():

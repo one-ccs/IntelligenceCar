@@ -5,7 +5,7 @@
 #
 #  Copyright 2022 ONE-CCS <ONE-CCS@ONE-CCS>
 #
-from IntelligenceCar.Devices import InfraredSensor
+from IntelligenceCar.Devices.InfraredSensor import InfraredSensor
 
 class InfraredSystem():
     """两个红外避障传感器组成的避障系统"""

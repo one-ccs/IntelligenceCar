@@ -5,23 +5,6 @@ from time import sleep
 from IntelligenceCar.Functions import *
 
 
-def test1():
-    """单轮测试"""
-    run1()
-    run1_1() # 左前进
-
-    run2()
-    run2_2() # 左后退
-
-    run3()
-    run3_3() # 右后退
-
-    run4()
-    run4_4() # 右前进
-
-    stop()
-
-
 def test2():
     """移动测试"""
     forward()
@@ -80,9 +63,7 @@ def test8():
 
 
 def main():
-    test1()
-
-    # test2()
+    test2()
 
     # test3()
 
@@ -92,7 +73,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        GPIO.cleanup()
+    main()
