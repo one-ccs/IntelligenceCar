@@ -139,7 +139,7 @@ def Image_Processing():
     # plt.imshow(close)
     # plt.show()
     #get contours
-    binary_c,contours,hierarchy = cv2.findContours(close, 1, cv2.CHAIN_APPROX_NONE)
+    contours,hierarchy = cv2.findContours(close, 1, cv2.CHAIN_APPROX_NONE)
     cv2.drawContours(image, contours, -1, (255,0,255), 2)
     # cv2.imshow('image', image)
     plt.imshow(image)

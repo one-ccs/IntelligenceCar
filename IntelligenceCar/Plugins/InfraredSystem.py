@@ -18,3 +18,8 @@ class InfraredSystem():
             self.left = InfraredSensor(left_pin)
         if right_pin:
             self.right = InfraredSensor(right_pin)
+            
+    @property
+    def state(self):
+        """返回传感器状态"""
+        return (self.left.value, self.right.value)

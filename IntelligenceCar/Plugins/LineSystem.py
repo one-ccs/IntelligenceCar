@@ -26,4 +26,14 @@ class LineSystem():
     @property
     def state(self):
         """返回传感器状态"""
-        return (self.left.value, self.mid.value, self.right)
+        ret = None
+
+        try:
+            ret = (self.left.value, self.mid.value, self.right.value)
+        except Exception:
+            try:
+                ret = (self.left.value, self.right.value)
+            except Exception:
+                pass
+            
+        return ret

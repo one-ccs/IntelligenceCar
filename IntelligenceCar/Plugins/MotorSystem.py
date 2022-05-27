@@ -96,13 +96,13 @@ class MotorSystem(Logger):
 
     def stop(self):
         """停止"""
-        self.log('<class MotorSystem> 停止')
+        self.log('停止')
         self.left_pwm.ChangeDutyCycle(0)
         self.right_pwm.ChangeDutyCycle(0)
 
     def forward(self):
         """前进"""
-        self.log('<class MotorSystem> 前进')
+        self.log('前进')
         self.left_direction = True
         self.right_direction = True
         self.left_pwm.ChangeDutyCycle(self._speed)
@@ -110,7 +110,7 @@ class MotorSystem(Logger):
 
     def backward(self):
         """后退"""
-        self.log('<class MotorSystem> 后退')
+        self.log('后退')
         self.left_direction = False
         self.right_direction = False
         self.left_pwm.ChangeDutyCycle(self._speed)
@@ -118,7 +118,7 @@ class MotorSystem(Logger):
 
     def turn_left(self):
         """左转"""
-        self.log('<class MotorSystem> 左转')
+        self.log('左转')
         self.left_direction = False
         self.right_direction = True
         self.left_pwm.ChangeDutyCycle(self._speed)

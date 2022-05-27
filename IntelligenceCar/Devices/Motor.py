@@ -25,7 +25,7 @@ class Motor(Logger):
     right_pwm = None
 
     def __init__(self, p_pin, f_pin, id=None):
-        self.log('<class Motor 正在初始化, p_pin: {}, f_pin: {}, id: {}.>'.format(
+        self.log('正在初始化, p_pin: {}, f_pin: {}, id: {}'.format(
             p_pin, f_pin, id))
         self._speed = 30.0       # 转速占空比
         self._frequency = 100.0  # pwm 频率 (Hz)
@@ -65,7 +65,7 @@ class Motor(Logger):
             raise ValueError("无效的参数 speed, 应为 -100.0 到 +100.0 之间的数字。")
         else:
             self._speed = speed
-            self.log('class Motor(' + str(self._id) +
+            self.log('(' + str(self._id) +
                      ') 设置速度 ' + str(self._speed))
 
     @property
@@ -82,17 +82,17 @@ class Motor(Logger):
         """前进"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, True)
-        self.log('<class Motor(' + str(self._id) +
-                 ') 正转, 速度 ' + str(self._speed) + '>')
+        self.log('(' + str(self._id) +
+                 ') 正转, 速度 ' + str(self._speed))
 
     def backward(self):
         """后退"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, False)
-        self.log('<class Motor(' + str(self._id) +
-                 ') 反转, 速度 ' + str(self._speed) + '>')
+        self.log('(' + str(self._id) +
+                 ') 反转, 速度 ' + str(self._speed))
 
     def stop(self):
         """停止"""
         self.pwm.ChangeDutyCycle(0)
-        self.log('<class Motor(' + str(self._id) + ') 停止>')
+        self.log('(' + str(self._id) + ') 停止')

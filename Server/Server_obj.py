@@ -3,6 +3,7 @@
 #
 #  Server_obj.py
 #
+from time import sleep
 from flask import Flask, request, Response, render_template
 import cv2
 
@@ -134,6 +135,9 @@ def video_feed1():
 
 @ic_server.route("/ultrasonic")
 def ultrasonic():
+    # global_car.start_infrared()
+    global_car.start_distance()
+    # global_car.start_dis_inf()
     return render_template("ultrasonic.html")
 
 
@@ -145,11 +149,15 @@ def showDistance():
 
 @ic_server.route("/LED")
 def LED():
+    global_car.turn_light_alternate()
+    sleep(2)
+    global_car.turn_bearth_light()
     return "OK"
 
 
 @ic_server.route("/buzzer")
 def Buzzer():
+    global_car.play_song()
     return "buzzer"
 
 
@@ -163,17 +171,21 @@ def ctrl():
     if request.method == "POST":
         data = request.get_json()
         t = data['ctrl']
-        global_car.forward(1.5)
-        global_car.backward(1.5)
-        global_car.turn_left(0.3)
-        global_car.turn_right(0.3)
+        if t == 'f':
+            global_car.forward(25)
+        if t == 'a':
+            global_car.backward(25)
+        if t == 'l':
+            global_car.turn_left(15)
+        if t == 'r':
+            global_car.turn_right(15)
     else:
         return "No"
 
 
 @ic_server.route("/tracing")
 def tracing():
-
+    global_car.start_line()
     return "tracing"
 
 

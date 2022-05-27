@@ -30,11 +30,17 @@ if __name__ == '__main__':
             LINES_RIGHT_PIN
         ),
         leds_pin=(
-            GREEN_LED,
-            RED_LED
+            GREEN_LED_PIN,
+            RED_LED_PIN
         ),
-        buzzer_pin=BUZZER_PIN
+        buzzer_pin=BUZZER_PIN,
+        distance_servo_pin=DISTANCE_SERVO_PIN,
+        camera_servos_pin=(
+            CAMERA_HORIZONTAL_SERVO_PIN,
+            CAMERA_VERTICAL_SERVO_PIN
+        )
     )
 
     # 启动服务器
-    run(car)
+    # run(car)
+    car.set_servo()
