@@ -8,19 +8,18 @@
 	<div id='body'>
 		<h2>欢迎来到树莓派小车控制系统</h2>
 		<div>
-			<form action="http://localhost:5000/horn" method="post" id="Driver_submit">
+			<form action="/horn" method="post" id="Driver_submit">
 				<input type="button" value="自动驾驶功能" id="driver">
 			</form>
-			<form  action="http://localhost:5000/Vedio" id="CMA">
+			<form  action="/Vedio" id="CMA">
 				<input type="button" value="摄像头识别功能" id="Camera">
 			</form>
 
-			<form  action="http://localhost:5000/ultrasonic" id="ultrasonic">
+			<form  action="/ultrasonic" id="ultrasonic">
 				<input type="button" value="超声波" id="ultrason">
 			</form>
 
 			<input type="button" value="物品追踪功能" id="Item_tracking">
-
 		</div>
 	</div>
 	<script>

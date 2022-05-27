@@ -8,16 +8,16 @@ from IntelligenceCar.Functions import *
 def test1():
     """单轮测试"""
     run1()
-    run1_1()
+    run1_1() # 左前进
 
     run2()
-    run2_2()
+    run2_2() # 左后退
 
     run3()
-    run3_3()
+    run3_3() # 右后退
 
     run4()
-    run4_4()
+    run4_4() # 右前进
 
     stop()
 

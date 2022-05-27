@@ -7,149 +7,35 @@
 #
 from time import sleep
 
-from IntelligenceCar.Devices import InfraredSensor
-from IntelligenceCar.Devices import DistanceSensor
-from IntelligenceCar.Devices import LineSensor
-from IntelligenceCar.Devices import TonalBuzzer
-from IntelligenceCar.Devices import LEDBoard
-from IntelligenceCar.Devices import Motor
-from IntelligenceCar.Devices import Camera
-from IntelligenceCar.Devices import PanTilt
+from Logger import Logger
+from Plugins import MotorSystem
 
 
-class InfraredSystem():
-    """两个红外避障传感器组成的避障系统"""
-
-    def __init__(self, left_pin=None, right_pin=None):
-        self.left = None
-        self.right = None
-
-        if left_pin:
-            self.left = InfraredSensor(left_pin)
-        if right_pin:
-            self.right = InfraredSensor(right_pin)
-
-
-class LineSystem():
-    """三个巡线传感器组成的巡线系统"""
-
-    def __init__(self, left_pin, mid_pin, right_pin):
-        self.left = None
-        self.mid = None
-        self.right = None
-
-        if left_pin:
-            self.left = LineSensor(left_pin)
-        if mid_pin:
-            self.mid = LineSensor(mid_pin)
-        if right_pin:
-            self.right = LineSensor(right_pin)
-
-    @property
-    def state(self):
-        """返回传感器状态"""
-        return (self.left.value, self.mid.value, self.right)
+# 电机针脚常量
+LEFT_FRONT_PIN = 22  # AIN1
+LEFT_REAR_PIN = 27   # AIN2
+LEFT_PWM_PIN = 18    # PWMA
+RIGHT_FRONT_PIN = 25  # BIN1
+RIGHT_REAR_PIN = 24  # BIN2
+RIGHT_PWM_PIN = 23   # PWMB
+# 红外避障传感器针脚
+INFRAREDS_LEFT_PIN = 12
+INFRAREDS_RIGHT_PIN = 16
+# 超声波传感器针脚
+DISTANCE_ECHO_PIN = 21
+DISTANCE_TRIGGER_PIN = 20
+# 寻线传感器针脚
+LINES_LEFT_PIN = 13
+LINES_MID_PIN = None
+LINES_RIGHT_PIN = 26
+# 蜂鸣器针脚常量
+BUZZER_PIN = 11
+# LED 针脚
+GREEN_LED = 5
+RED_LED = 6
 
 
-class Lights():
-    """led 车灯"""
-
-    def __init__(self, left_pin, right_pin):
-        self.lights = None
-
-        if left_pin and right_pin:
-            self.lights = LEDBoard(left_pin, right_pin, pwm=True)
-
-    def set(self, left_brightness=1.0, right_brightness=1.0):
-        """同时调节两个 led 的亮度, 取值为 0.0 熄灭到 1.0 高亮。"""
-        self.lights.value = (left_brightness, right_brightness)
-
-    def both_on(self):
-        self.lights.on()
-
-    def both_off(self):
-        self.lights.off()
-
-
-class CameraSystem():
-    """摄像系统"""
-
-    def __init__(self):
-        self.camera = Camera()
-        self.pan_tilt = PanTilt()
-
-    def track(self, image):
-        """使摄像头瞄准目标物"""
-        pass
-
-    def autofocus(self):
-        """自动对焦"""
-        pass
-
-
-class MotorSystem():
-    """
-    四轮驱动器
-
-    :参数 整型元组 pins:
-        初始化电机 pin 接口的二维元组表 (
-            (左前 pwm, 左前方向), (右前 pwm, 右前方向),
-            (右后 pwm, 右后方向), (左后 pwm, 左后方向)
-        )
-
-    :属性 浮点型 speed:
-        将电机的转速表示为 -100.0 (全速后退) 到 +100.0 (全速前进) 之间的浮点值。
-    """
-
-    def __init__(self, pins=((None, None), (None, None), (None, None), (None, None))):
-        self._speed = 50.0  # 轮子转动速度百分比
-        self.motors = [None, None, None, None]  # 左前、右前、右后、左后电机
-
-        for i in range(4):
-            self.motors[i] = Motor(pins[i][0], pins[i][1], i)
-
-    @property
-    def speed(self):
-        return self._speed
-
-    @speed.setter
-    def speed(self, speed):
-        self._speed = speed
-
-        for i in range(4):
-            self.motors[i].speed = speed
-
-    def stop(self):
-        """停止"""
-        for i in range(4):
-            self.motors[i].stop()
-
-    def forward(self):
-        """前进"""
-        for i in range(4):
-            self.motors[i].forward()
-
-    def backward(self):
-        """后退"""
-        for i in range(4):
-            self.motors[i].backward()
-
-    def turn_left(self):
-        """左转"""
-        self.motors[0].backward()
-        self.motors[1].forward()
-        self.motors[2].forward()
-        self.motors[3].backward()
-
-    def turn_right(self):
-        """右转"""
-        self.motors[0].forward()
-        self.motors[1].backward()
-        self.motors[2].backward()
-        self.motors[3].forward()
-
-
-class Car():
+class Car(Logger):
     """智能小车
 
     :参数 整型二维元组 wheels_pin:
@@ -170,10 +56,12 @@ class Car():
     :参数 整型 buzzer_pin:
         蜂鸣器针脚。
     """
+    STEER_TIME = 0.002     # 车子旋转 1° 需要的秒数
+    STRAIGHT_TIME = 0.2  # 车子直行一单位 1cm 需要的秒数
 
     def __init__(
         self,
-        wheels_pin=((None, None), (None, None), (None, None), (None, None)),
+        wheels_pin=((None, None), None, (None, None), None),
         # infrareds_pin=(None, None),
         # distance_pin=(None, None),
         # lines_pin=(None, None, None),
@@ -181,13 +69,14 @@ class Car():
         # green_led_pin=None,
         # red_led_pin=None
     ):
-        self._STEER_TIME = 0.2     # 车子旋转 1° 需要的秒数
-        self._STRAIGHT_TIME = 0.2  # 车子直行一单位 1cm 需要的秒数
+        self.wheels = None
+        self.infrareds = None
+        self.distance = None
+        self.lines = None
+        self.buzzer = None
 
         if wheels_pin:
             self.wheels = MotorSystem(wheels_pin)             # 车轮系统
-        # if camera_pin:
-        #     self.camera = CameraSystem(camera_pin)            # 摄像头
         # if infrareds_pin:
         #     self.infrareds = InfraredSensor(infrareds_pin)  # 红外避障
         # if distance_pin:
@@ -199,6 +88,7 @@ class Car():
 
     def stop(self):
         """停止"""
+        self.log('<class Car> 停止')
         self.wheels.stop()
 
     def forward(self, distance):
@@ -208,8 +98,10 @@ class Car():
         :参数 整型 deg:
             要选择的度数。
         """
+        self.log('<class Car> 前进 {} 单位, {} 秒'.format(
+            distance, Car.STRAIGHT_TIME * distance))
         self.wheels.forward()
-        sleep(self._STRAIGHT_TIME * distance)
+        sleep(Car.STRAIGHT_TIME * distance)
         self.wheels.stop()
 
     def backward(self, distance):
@@ -219,8 +111,10 @@ class Car():
         :参数 整型 deg:
             要选择的度数。
         """
+        self.log('<class Car> 后退 {} 单位, {} 秒'.format(
+            distance, Car.STRAIGHT_TIME * distance))
         self.wheels.backward()
-        sleep(self._STRAIGHT_TIME * distance)
+        sleep(Car.STRAIGHT_TIME * distance)
         self.wheels.stop()
 
     def turn_left(self, deg):
@@ -230,8 +124,10 @@ class Car():
         :参数 整型 deg:
             要选择的度数。
         """
+        self.log('<class Car> 向左旋转 {} 单位, {} 秒'.format(
+            deg, Car.STRAIGHT_TIME * deg))
         self.wheels.turn_left()
-        sleep(self._STEER_TIME * deg)
+        sleep(Car.STEER_TIME * deg)
         self.wheels.stop()
 
     def turn_right(self, deg):
@@ -241,6 +137,12 @@ class Car():
         :参数 整型 deg:
             要选择的度数。
         """
+        self.log('<class Car> 向右旋转 {} 单位, {} 秒'.format(
+            deg, Car.STRAIGHT_TIME * deg))
         self.wheels.turn_right()
-        sleep(self._STEER_TIME * deg)
+        sleep(Car.STEER_TIME * deg)
         self.wheels.stop()
+
+    def get_distance(self):
+        """获取超声波传感器数值, 单位 cm."""
+        return self.distance.get_value()

@@ -2,11 +2,14 @@
 # -*- coding: utf-8 -*-
 #
 from IntelligenceCar.Car import Car
+from IntelligenceCar.Pins import *
 
-# 电机针脚 ((左前 pwm, 左前方向), (右前 pwm, 右前方向), (右后 pwm, 右后方向), (左后 pwm, 左后方向))
-WHEELS_PIN = ((18, 22), (23, 25), (23, 24), (18, 27))
-
-car = Car(WHEELS_PIN)
+car = Car(
+    (
+        (LEFT_FRONT_PIN, LEFT_REAR_PIN), LEFT_PWM_PIN,
+        (RIGHT_FRONT_PIN, RIGHT_REAR_PIN), RIGHT_PWM_PIN
+    )
+)
 
 
 def test1():
@@ -21,12 +24,10 @@ def test2():
 
 def test3():
     """速度 15 向左旋转 10s"""
-    
 
 
 def test4():
     """速度 15 直行 10s"""
-    
 
 
 def main():

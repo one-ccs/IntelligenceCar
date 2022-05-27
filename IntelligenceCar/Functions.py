@@ -6,7 +6,7 @@ from datetime import datetime
 import time
 
 # 单位常量
-TIME_TURN_DEG = 0.07  # 旋转 1 度的秒数
+TIME_TURN_DEG = 0.025  # 旋转 1 度的秒数
 TIME_STRAIGHT = 0.02  # 直行 1 单位的秒数
 
 # 电机针脚常量
@@ -291,8 +291,8 @@ def setup_distance():
     logger('安装超声波传感器')
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(DISTANCE_ECHO_PIN, GPIO.OUT)
-    GPIO.setup(DISTANCE_TRIGGER_PIN, GPIO.IN)
+    GPIO.setup(DISTANCE_ECHO_PIN, GPIO.IN)
+    GPIO.setup(DISTANCE_TRIGGER_PIN, GPIO.OUT)
 
 
 def clean_distance():
@@ -330,7 +330,7 @@ def start_distance():
 
     for i in range(99):
         dis = get_distance()
-        
+
         if (dis < DIS) == True:
             while (dis < DIS) == True:
                 backward(t_time=0.5)
@@ -347,11 +347,11 @@ def start_dis_inf():
 
     for i in range(99):
         dis = get_distance()
-        
+
         if (dis < DIS) == True:
             while (dis < DIS) == True:
                 infrared_state = get_infrared_state()
-                
+
                 if infrared_state == (True, True):
                     forward()
                 elif infrared_state == (True, False):
@@ -365,7 +365,6 @@ def start_dis_inf():
                 dis = get_distance()
         else:
             forward(t_time=0)
-
 
 
 # LED

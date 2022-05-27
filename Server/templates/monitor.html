@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../static/js/jquery.min.js"></script>
+</head>
+<body>
+<img src="{{ url_for('video_feed1') }}" id="B">
+    <input type="button" value="前" id="f">
+    <input type="button" value="后" id="a">
+    <input type="button" value="左" id="l">
+    <input type="button" value="右" id="r">
+    <script>
+        front=document.getElementById("f");
+        after=document.getElementById("a");
+        left=document.getElementById("l");
+        right=document.getElementById("r");
+        front.onclick=function(){
+            value=this.id;
+            data={ctrl:value}
+            $.ajax({
+                url:"/ctrl",
+                type:"post",
+				data:data,
+				contentType: 'application/json',
+				data:JSON.stringify(data),
+				success:function(e){
+					console.log(e)
+				},
+				error:function(){
+					alert("连接服务器失败")
+				}
+            })
+        }
+        after.onclick=function(){
+            value=this.id;
+            data={ctrl:value}
+            $.ajax({
+                url:"/ctrl",
+                type:"POST",
+				data:data,
+				contentType: 'application/json',
+				data:JSON.stringify(data),
+				success:function(e){
+					console.log(e)
+				},
+				error:function(){
+					alert("连接服务器失败")
+				}
+            })
+        }
+        left.onclick=function(){
+            value=this.id;
+            data={ctrl:value}
+            $.ajax({
+                url:"/ctrl",
+                type:"post",
+				data:data,
+				contentType: 'application/json',
+				data:JSON.stringify(data),
+				success:function(e){
+					console.log(e)
+				},
+				error:function(){
+					alert("连接服务器失败")
+				}
+            })
+        }
+        right.onclick=function()
+        {
+            value=this.id;
+            data={ctrl:value}
+            $.ajax({
+                url:"/ctrl",
+                type:"post",
+				data:data,
+				contentType: 'application/json',
+				data:JSON.stringify(data),
+				success:function(e){
+					console.log(e)
+				},
+				error:function(){
+					alert("连接服务器失败")
+				}
+            })
+        }
+
+    </script>
+</body>
+</html>
