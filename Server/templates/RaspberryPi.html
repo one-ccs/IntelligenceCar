@@ -3,37 +3,110 @@
 <head>
 	<meta charset="UTF-8">
 	<title>树莓派小车控制中心</title>
+	<style>
+		#body{
+			width:340px;
+			margin:auto;
+		}
+		#panel{
+			width:320px;
+			height:380px;
+			border: 2px solid green;
+			border-radius: 10px;
+		}
+		.fun{
+			width:120px;
+			height:50px;
+			float:left;
+			margin:20px;
+		}
+		.button{
+			text-align: center;
+			width:100px;
+			height:30px;
+			position: relative;
+			left:10px;
+			top:10px;
+		}
+	</style>
 </head>
 <body>
 	<div id='body'>
-		<h2>欢迎来到树莓派小车控制系统</h2>
-		<div>
-			<form action="/horn" method="post" id="Driver_submit">
-				<input type="button" value="自动驾驶功能" id="driver">
+		<h2>欢迎来到树莓派小车控制系统！</h2>
+		<div id="panel">
+			<form action="/horn" method="get" id="Driver_submit" class="fun">
+				<input type="button" value="规划路线行驶" id="driver" class="button">
 			</form>
-			<form  action="/Vedio" id="CMA">
-				<input type="button" value="摄像头识别功能" id="Camera">
+<!--进入规划路线形式界面-->
+			<form  action="/Vedio" id="CMA" class="fun">
+				<input type="button" value="运动物识别" id="Camera" class="button">
 			</form>
-
-			<form  action="/ultrasonic" id="ultrasonic">
-				<input type="button" value="超声波" id="ultrason">
+<!--进入运动物体识别-->
+			<form  action="/ultrasonic" id="ultrasonic" class="fun">
+				<input type="button" value="超声波避障" id="ultrason" class="button">
 			</form>
-
-			<input type="button" value="物品追踪功能" id="Item_tracking">
+<!--进入超声波避障功能-->
+			<form action="/infrared" id="infrared" class="fun">
+				<input type="button" value="红外线避障" id="infraredBton" class="button">
+			</form>
+<!--进入红外线避障-->
+			<form action="/LED" id="LED" class="fun">
+				<input type="button" value="LED闪烁" id="LEDBton" class="button">
+			</form>
+<!--LED-->
+			<form action="/buzzer" id="Buzzer" class="fun">
+				<input type="button" value="蜂鸣器" id="BuzzerBton" class="button">
+			</form>
+<!--蜂鸣器-->
+			<form action="/monitor" id="monitor" class="fun">
+				<input type="button" value="小车监控器" id="monitorBton" class="button">
+			</form>
+<!--小车监控器-->
+			<form action="/tracing" id="Tracing" class="fun">
+				<input type="button" value="自动寻找迹" id="TracingBton" class="button">
+			</form>
 		</div>
 	</div>
 	<script>
+		//规划路线行驶
 		driver=document.getElementById("driver");
 		driver.onclick=function (){
 			document.getElementById("Driver_submit").submit();
 		}
+		//运动物识别
 		Camera=document.getElementById("Camera");
 		Camera.onclick=function(){
 			document.getElementById("CMA").submit();
 		}
+		//超声波避障
 		ultrason=document.getElementById("ultrason");
 		ultrason.onclick=function (){
 			document.getElementById("ultrasonic").submit();
+		}
+		//红外线避障
+		infraredBton=document.getElementById("infraredBton");
+		infraredBton.onclick=function (){
+			document.getElementById("infrared").submit();
+		}
+		//LED闪烁
+		LEDBton=document.getElementById("LEDBton");
+		LEDBton.onclick=function (){
+			document.getElementById("LED").submit();
+		}
+		//蜂鸣器
+		BuzzerBton=document.getElementById("BuzzerBton");
+		BuzzerBton.onclick=function (){
+			document.getElementById("Buzzer").submit();
+		}
+		//小车监控器
+		monitorBton=document.getElementById("monitorBton");
+		monitorBton.onclick=function (){
+			document.getElementById("monitor").submit();
+		}
+		//自动寻找迹
+		TracingBton=document.getElementById("TracingBton");
+		TracingBton.onclick=function (){
+			document.getElementById("Tracing").submit();
 		}
 	</script>
 </body>
