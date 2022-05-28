@@ -255,8 +255,14 @@ class Car(Logger):
         for i in range(999):
             lines_state = self.get_lines_state()
 
+            # lines_state = (not lines_state[0], not lines_state[1])
+
             if lines_state == (False, False):
-                self.forward()
+                # self.forward()
+                sleep(0.2)
+                lines_state = self.get_lines_state()
+                if lines_state == (False, False):
+                    self.forward()
             elif lines_state == (True, False):
                 self.turn_left()
             elif lines_state == (False, True):
