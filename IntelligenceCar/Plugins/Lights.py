@@ -25,3 +25,4 @@ class Lights():
 
     def both_off(self):
         self.lights.off()
+        

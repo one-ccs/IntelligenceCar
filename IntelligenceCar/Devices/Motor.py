@@ -65,8 +65,8 @@ class Motor(Logger):
             raise ValueError("无效的参数 speed, 应为 -100.0 到 +100.0 之间的数字。")
         else:
             self._speed = speed
-            self.log('(' + str(self._id) +
-                     ') 设置速度 ' + str(self._speed))
+            self.log(
+                '(' + str(self._id) + ') 设置速度 ' + str(self._speed))
 
     @property
     def frequency(self):
@@ -82,15 +82,13 @@ class Motor(Logger):
         """前进"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, True)
-        self.log('(' + str(self._id) +
-                 ') 正转, 速度 ' + str(self._speed))
+        self.log('(' + str(self._id) + ') 正转, 速度 ' + str(self._speed))
 
     def backward(self):
         """后退"""
         self.pwm.ChangeDutyCycle(abs(self._speed))
         GPIO.output(self.f_pin, False)
-        self.log('(' + str(self._id) +
-                 ') 反转, 速度 ' + str(self._speed))
+        self.log('(' + str(self._id) + ') 反转, 速度 ' + str(self._speed))
 
     def stop(self):
         """停止"""
